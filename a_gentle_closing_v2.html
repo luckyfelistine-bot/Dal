@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gentle Closing — Felix & Maureen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Josefin+Sans:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pure-white: #ffffff;
+            --warm-white: #faf9f7;
+            --soft-cream: #f5f3ef;
+            --pale-linen: #ebe8e3;
+            --charcoal: #2c2c2c;
+            --soft-gray: #6b6b6b;
+            --muted-gold: #b8a88a;
+            --warm-rose: #c4a4a4;
+            --slate-blue: #7a8fa8;
+            --scanline: rgba(0,0,0,0.03);
+        }
+
+        body {
+            font-family: 'Josefin Sans', sans-serif;
+            background: var(--soft-cream);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            color: var(--charcoal);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Scanlines overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                var(--scanline) 2px,
+                var(--scanline) 4px
+            );
+            opacity: 0.6;
+        }
+
+        /* Vignette */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.04) 100%);
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            background: var(--muted-gold);
+            opacity: 0.15;
+            animation: drift 20s infinite linear;
+            z-index: 1;
+        }
+        @keyframes drift {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 0.15; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+        }
+
+        .document-container {
+            background: var(--pure-white);
+            max-width: 780px;
+            width: 100%;
+            padding: 0;
+            box-shadow: 
+                0 1px 1px rgba(0,0,0,0.01),
+                0 30px 80px rgba(44,44,44,0.08);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            border: 1px solid var(--pale-linen);
+        }
+
+        /* Top border */
+        .document-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, 
+                var(--muted-gold) 0%, 
+                var(--warm-rose) 25%, 
+                var(--slate-blue) 50%, 
+                var(--warm-rose) 75%, 
+                var(--muted-gold) 100%);
+            opacity: 0.6;
+        }
+
+        .inner {
+            padding: 55px 50px;
+            position: relative;
+        }
+
+        /* Corner flourishes */
+        .corner {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            opacity: 0.25;
+        }
+        .corner::before, .corner::after {
+            content: '';
+            position: absolute;
+            background: var(--muted-gold);
+        }
+        .corner.tl { top: 25px; left: 25px; }
+        .corner.tl::before { top: 0; left: 0; width: 25px; height: 1px; }
+        .corner.tl::after { top: 0; left: 0; width: 1px; height: 25px; }
+        .corner.tr { top: 25px; right: 25px; }
+        .corner.tr::before { top: 0; right: 0; width: 25px; height: 1px; }
+        .corner.tr::after { top: 0; right: 0; width: 1px; height: 25px; }
+        .corner.bl { bottom: 25px; left: 25px; }
+        .corner.bl::before { bottom: 0; left: 0; width: 25px; height: 1px; }
+        .corner.bl::after { bottom: 0; left: 0; width: 1px; height: 25px; }
+        .corner.br { bottom: 25px; right: 25px; }
+        .corner.br::before { bottom: 0; right: 0; width: 25px; height: 1px; }
+        .corner.br::after { bottom: 0; right: 0; width: 1px; height: 25px; }
+
+        /* Header */
+        .ornament-top {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .ornament-top svg {
+            width: 36px;
+            height: 36px;
+            opacity: 0.35;
+            stroke: var(--muted-gold);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 40px;
+            text-align: center;
+            color: var(--charcoal);
+            margin-bottom: 6px;
+            letter-spacing: 4px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-weight: 300;
+            font-size: 11px;
+            color: var(--soft-gray);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .divider {
+            width: 70px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--warm-rose), transparent);
+            margin: 0 auto 30px;
+        }
+
+        /* Dedication */
+        .dedication {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 19px;
+            line-height: 2;
+            text-align: center;
+            color: var(--soft-gray);
+            margin-bottom: 35px;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        /* The Story Box */
+        .story-box {
+            background: linear-gradient(135deg, #fcfaf8 0%, #f8f6f2 100%);
+            border: 1px solid rgba(184,168,138,0.15);
+            padding: 30px 35px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+        .story-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: var(--muted-gold);
+            opacity: 0.4;
+        }
+        .story-label {
+            text-align: center;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: var(--muted-gold);
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+        .story-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            line-height: 1.9;
+            text-align: center;
+            color: var(--charcoal);
+            font-weight: 400;
+        }
+        .story-text .highlight {
+            color: var(--warm-rose);
+            font-weight: 500;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            margin-bottom: 40px;
+            border-top: 1px solid rgba(184,168,138,0.12);
+            border-left: 1px solid rgba(184,168,138,0.12);
+        }
+        .detail-cell {
+            padding: 16px 18px;
+            border-right: 1px solid rgba(184,168,138,0.12);
+            border-bottom: 1px solid rgba(184,168,138,0.12);
+            text-align: center;
+        }
+        .detail-cell.full-width {
+            grid-column: 1 / -1;
+        }
+        .detail-cell-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--soft-gray);
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+        .detail-cell-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            color: var(--charcoal);
+            font-weight: 500;
+        }
+        .detail-cell-value.small {
+            font-size: 17px;
+            font-weight: 400;
+        }
+
+        /* Closing Words */
+        .closing-words {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 19px;
+            line-height: 2;
+            text-align: center;
+            color: var(--soft-gray);
+            margin-bottom: 40px;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        /* Dual Confirmation Area */
+        .confirmation-section {
+            border: 2px dashed rgba(184,168,138,0.35);
+            padding: 35px 30px;
+            text-align: center;
+            transition: all 0.8s ease;
+            position: relative;
+            background: rgba(255,255,255,0.6);
+        }
+        .confirmation-section.both-confirmed {
+            border-style: solid;
+            border-color: rgba(122,143,168,0.35);
+            background: rgba(250,249,247,0.7);
+        }
+        .confirmation-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            color: var(--soft-gray);
+            margin-bottom: 25px;
+            font-weight: 400;
+            font-style: italic;
+        }
+        .checkboxes-row {
+            display: flex;
+            justify-content: center;
+            gap: 45px;
+            flex-wrap: wrap;
+        }
+        .person-check {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            padding: 12px 22px;
+            border-radius: 8px;
+        }
+        .person-check:hover {
+            background: rgba(184,168,138,0.04);
+        }
+        .person-check.confirmed {
+            background: rgba(122,143,168,0.06);
+        }
+        .check-circle {
+            width: 48px;
+            height: 48px;
+            border: 2px solid var(--warm-rose);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: white;
+            position: relative;
+        }
+        .check-circle svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-dasharray: 30;
+            stroke-dashoffset: 30;
+            transition: stroke-dashoffset 0.5s ease 0.1s;
+        }
+        .person-check.confirmed .check-circle {
+            background: var(--slate-blue);
+            border-color: var(--slate-blue);
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(122,143,168,0.25);
+        }
+        .person-check.confirmed .check-circle svg {
+            stroke-dashoffset: 0;
+        }
+        .person-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 21px;
+            color: var(--charcoal);
+            font-weight: 500;
+            transition: all 0.4s ease;
+        }
+        .person-check.confirmed .person-name {
+            color: var(--slate-blue);
+        }
+        .person-status {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--soft-gray);
+            transition: all 0.4s ease;
+            opacity: 0.7;
+        }
+        .person-check.confirmed .person-status {
+            color: var(--slate-blue);
+            opacity: 1;
+        }
+
+        /* The Shared Seal - FIXED */
+        .shared-seal {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+        }
+        .shared-seal.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .seal-circle {
+            width: 160px;
+            height: 160px;
+            border: 3px double var(--slate-blue);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            position: relative;
+            animation: gentlePulse 3s ease-in-out infinite;
+            padding: 15px;
+        }
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.02); opacity: 1; }
+        }
+        .seal-text-main {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--slate-blue);
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .seal-text-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10px;
+            color: var(--soft-gray);
+            margin-top: 6px;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .seal-date {
+            font-size: 11px;
+            color: var(--soft-gray);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .seal-divider {
+            width: 35px;
+            height: 1px;
+            background: var(--slate-blue);
+            margin: 10px auto;
+            opacity: 0.4;
+        }
+
+        /* Screenshot Button */
+        .screenshot-btn {
+            display: none;
+            margin: 25px auto 0;
+            padding: 12px 28px;
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .screenshot-btn.show {
+            display: inline-block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .screenshot-btn:hover {
+            background: var(--slate-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(122,143,168,0.3);
+        }
+        .screenshot-btn svg {
+            width: 14px;
+            height: 14px;
+            vertical-align: middle;
+            margin-right: 8px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Footer blessing */
+        .footer-blessing {
+            margin-top: 45px;
+            text-align: center;
+            position: relative;
+        }
+        .footer-blessing::before {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--warm-rose), transparent);
+            margin: 0 auto 25px;
+        }
+        .blessing-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 17px;
+            line-height: 2;
+            color: var(--soft-gray);
+            font-style: italic;
+            font-weight: 400;
+        }
+        .blessing-author {
+            margin-top: 12px;
+            font-size: 10px;
+            color: var(--muted-gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Floating hearts */
+        .heart {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0;
+            animation: floatUp 4s ease-in forwards;
+            font-size: 20px;
+            color: var(--warm-rose);
+            z-index: 1001;
+        }
+        @keyframes floatUp {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            15% { opacity: 0.5; transform: translateY(-30px) scale(1); }
+            100% { opacity: 0; transform: translateY(-400px) scale(0.3); }
+        }
+
+        /* Flash effect for screenshot */
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.1s ease;
+        }
+        .flash-overlay.active {
+            opacity: 0.8;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--charcoal);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 10000;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .inner { padding: 35px 22px; }
+            h1 { font-size: 26px; }
+            .story-text { font-size: 16px; }
+            .details-grid { grid-template-columns: 1fr; }
+            .detail-cell { border-right: none; }
+            .checkboxes-row { gap: 25px; flex-direction: column; }
+            .check-circle { width: 44px; height: 44px; }
+            .check-circle svg { width: 18px; height: 18px; }
+            .seal-circle { width: 140px; height: 140px; }
+            .seal-text-main { font-size: 11px; letter-spacing: 2px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    <div class="flash-overlay" id="flashOverlay"></div>
+    <div class="toast" id="toast"></div>
+
+    <div class="document-container" id="documentContainer">
+        <div class="inner">
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+
+            <div class="ornament-top">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="1">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+
+            <h1>A Gentle Closing</h1>
+            <div class="subtitle">Of Something Beautiful</div>
+
+            <div class="divider"></div>
+
+            <div class="dedication">
+                This is not a document of regret.<br>
+                It is a quiet recognition of a chapter<br>
+                that was written with care, laughter, and truth.
+            </div>
+
+            <div class="story-box">
+                <div class="story-label">The Story</div>
+                <div class="story-text">
+                    On <span class="highlight">January 1st, 2026</span>, two souls named 
+                    <span class="highlight">Felix</span> and <span class="highlight">Maureen</span> 
+                    chose to walk together. For <span class="highlight">150 days</span>, they shared 
+                    mornings, evenings, dreams, and silences. What they built was real. What they felt was true. 
+                    And now, with the same honesty that brought them together, they choose to close this chapter 
+                    — not with bitterness, but with gratitude.
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div class="detail-cell">
+                    <div class="detail-cell-label">Began</div>
+                    <div class="detail-cell-value small">January 1, 2026</div>
+                </div>
+                <div class="detail-cell">
+                    <div class="detail-cell-label">Closes</div>
+                    <div class="detail-cell-value small">May 31, 2026</div>
+                </div>
+                <div class="detail-cell">
+                    <div class="detail-cell-label">Shared By</div>
+                    <div class="detail-cell-value">Felix</div>
+                </div>
+                <div class="detail-cell">
+                    <div class="detail-cell-label">And</div>
+                    <div class="detail-cell-value">Maureen</div>
+                </div>
+                <div class="detail-cell full-width">
+                    <div class="detail-cell-label">Duration of Togetherness</div>
+                    <div class="detail-cell-value">One Hundred & Fifty Days</div>
+                </div>
+            </div>
+
+            <div class="closing-words">
+                We do not erase what was written.<br>
+                We simply turn the page —<br>
+                with respect, with softness, and with hope<br>
+                for the stories yet to come.
+            </div>
+
+            <div class="confirmation-section" id="confirmationSection">
+                <div class="confirmation-title">To close this chapter, both must gently touch their name:</div>
+
+                <div class="checkboxes-row">
+                    <div class="person-check" id="felixCheck" onclick="togglePerson('felix')">
+                        <div class="check-circle">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="person-name">Felix</div>
+                        <div class="person-status" id="felixStatus">Touch to confirm</div>
+                    </div>
+
+                    <div class="person-check" id="maureenCheck" onclick="togglePerson('maureen')">
+                        <div class="check-circle">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                        </div>
+                        <div class="person-name">Maureen</div>
+                        <div class="person-status" id="maureenStatus">Touch to confirm</div>
+                    </div>
+                </div>
+
+                <div class="shared-seal" id="sharedSeal">
+                    <div class="seal-circle">
+                        <div class="seal-text-main">Acknowledged</div>
+                        <div class="seal-divider"></div>
+                        <div class="seal-text-sub">With Peace & Gratitude</div>
+                    </div>
+                    <div class="seal-date" id="sealDate"></div>
+                </div>
+
+                <button class="screenshot-btn" id="screenshotBtn" onclick="takeScreenshot()">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    Capture This Moment
+                </button>
+            </div>
+
+            <div class="footer-blessing">
+                <div class="blessing-text">
+                    "May the road rise up to meet you.<br>
+                    May the wind be always at your back.<br>
+                    May the sun shine warm upon your face,<br>
+                    and may you both find the love you deserve."
+                </div>
+                <div class="blessing-author">— An Old Irish Blessing, For You Both</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            for (let i = 0; i < 8; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.width = (2 + Math.random() * 4) + 'px';
+                p.style.height = p.style.width;
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = (Math.random() * 20) + 's';
+                p.style.animationDuration = (15 + Math.random() * 15) + 's';
+                document.body.appendChild(p);
+            }
+        }
+        createParticles();
+
+        const state = {
+            felix: false,
+            maureen: false
+        };
+
+        const STORAGE_KEY = 'gentle_closing_state_v2';
+
+        // Load saved state
+        function loadState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    if (data.felix) togglePerson('felix', true);
+                    if (data.maureen) togglePerson('maureen', true);
+                }
+            } catch(e) {}
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch(e) {}
+        }
+
+        function togglePerson(person, silent = false) {
+            if (!silent) {
+                state[person] = !state[person];
+                saveState();
+            } else {
+                state[person] = true;
+            }
+
+            const checkEl = document.getElementById(person + 'Check');
+            const statusEl = document.getElementById(person + 'Status');
+            const section = document.getElementById('confirmationSection');
+            const seal = document.getElementById('sharedSeal');
+            const sealDate = document.getElementById('sealDate');
+            const screenshotBtn = document.getElementById('screenshotBtn');
+
+            if (state[person]) {
+                checkEl.classList.add('confirmed');
+                statusEl.textContent = 'Confirmed';
+            } else {
+                checkEl.classList.remove('confirmed');
+                statusEl.textContent = 'Touch to confirm';
+            }
+
+            if (state.felix && state.maureen) {
+                section.classList.add('both-confirmed');
+                seal.classList.add('show');
+                screenshotBtn.classList.add('show');
+
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                sealDate.textContent = now.toLocaleDateString('en-US', options);
+
+                if (!silent) createHearts();
+            } else {
+                section.classList.remove('both-confirmed');
+                seal.classList.remove('show');
+                screenshotBtn.classList.remove('show');
+            }
+        }
+
+        function createHearts() {
+            const colors = ['#c4a4a4', '#b8a88a', '#7a8fa8', '#d4b8b8'];
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = '❦';
+                    heart.style.left = (15 + Math.random() * 70) + '%';
+                    heart.style.top = '55%';
+                    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    heart.style.fontSize = (12 + Math.random() * 18) + 'px';
+                    heart.style.animationDuration = (3 + Math.random() * 2) + 's';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 180);
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function takeScreenshot() {
+            const flash = document.getElementById('flashOverlay');
+            const container = document.getElementById('documentContainer');
+
+            // Flash effect
+            flash.classList.add('active');
+            setTimeout(() => flash.classList.remove('active'), 200);
+
+            showToast('Capturing...');
+
+            // Small delay to let flash settle
+            setTimeout(() => {
+                html2canvas(container, {
+                    scale: 2,
+                    backgroundColor: '#f5f3ef',
+                    useCORS: true,
+                    logging: false
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'Felix_and_Maureen_A_Gentle_Closing.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showToast('Screenshot saved!');
+                }).catch(err => {
+                    showToast('Could not capture. Try again.');
+                    console.error(err);
+                });
+            }, 300);
+        }
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', loadState);
+    </script>
+</body>
+</html>
