@@ -81,16 +81,45 @@
     </div>
   </div>
 
-  <!-- Input area -->
-  <div class="gate-input-area" id="gateInputArea">
+  <!-- PIN Pad -->
+  <div class="gate-pin-area" id="gatePinArea">
     <div class="gate-title" id="gateTitle">The Gates of Forever</div>
-    <div class="gate-subtitle">Only the one who holds the key may enter</div>
-    <div class="gate-input-wrap">
-      <input type="password" class="gate-input" id="gateInput" placeholder="Speak the secret..." autocomplete="off" spellcheck="false" maxlength="10">
-      <div class="gate-input-glow"></div>
+    <div class="gate-subtitle">Enter the sacred combination</div>
+
+    <!-- PIN Dots Display -->
+    <div class="pin-display">
+      <div class="pin-dot" id="pinDot0"></div>
+      <div class="pin-dot" id="pinDot1"></div>
+      <div class="pin-dot" id="pinDot2"></div>
+      <div class="pin-dot" id="pinDot3"></div>
     </div>
+
+    <!-- PIN Keypad -->
+    <div class="pin-keypad">
+      <div class="pin-row">
+        <button class="pin-key" onclick="pressPinKey('1')">1</button>
+        <button class="pin-key" onclick="pressPinKey('2')">2</button>
+        <button class="pin-key" onclick="pressPinKey('3')">3</button>
+      </div>
+      <div class="pin-row">
+        <button class="pin-key" onclick="pressPinKey('4')">4</button>
+        <button class="pin-key" onclick="pressPinKey('5')">5</button>
+        <button class="pin-key" onclick="pressPinKey('6')">6</button>
+      </div>
+      <div class="pin-row">
+        <button class="pin-key" onclick="pressPinKey('7')">7</button>
+        <button class="pin-key" onclick="pressPinKey('8')">8</button>
+        <button class="pin-key" onclick="pressPinKey('9')">9</button>
+      </div>
+      <div class="pin-row">
+        <button class="pin-key pin-key-clear" onclick="clearPin()">⌫</button>
+        <button class="pin-key" onclick="pressPinKey('0')">0</button>
+        <button class="pin-key pin-key-clear" onclick="clearPin()">✕</button>
+      </div>
+    </div>
+
     <div class="gate-error" id="gateError">The gates remain sealed. Try again, beloved.</div>
-    <div class="gate-hint">Hint: The one who holds your heart forever</div>
+    <div class="gate-hint">Hint: The year the universe smiled</div>
   </div>
 
   <!-- Welcome text that appears after unlock -->
