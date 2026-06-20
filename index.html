@@ -1246,5 +1246,716 @@ document.head.appendChild(style);
 loadSong(0);
 showToast('Welcome, Dal. Use arrow keys or scroll to navigate 💫');
 </script>
+
+<!-- ==================== EXAM ENCOURAGEMENT POPUP MODULE v2 ==================== -->
+<style>
+  /* Floating trigger button */
+  .exam-trigger{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    z-index:9998;
+    background:linear-gradient(135deg,#6b9b7a,#7a9eb8);
+    color:white;
+    border:none;
+    border-radius:50px;
+    padding:14px 24px;
+    font-family:'Josefin Sans',sans-serif;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    cursor:pointer;
+    box-shadow:0 8px 30px rgba(107,155,122,0.35);
+    transition:all 0.4s ease;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    animation:triggerPulse 2s ease-in-out infinite;
+  }
+  .exam-trigger:hover{
+    transform:translateY(-3px) scale(1.05);
+    box-shadow:0 12px 40px rgba(107,155,122,0.45);
+  }
+  @keyframes triggerPulse{
+    0%,100%{box-shadow:0 8px 30px rgba(107,155,122,0.35)}
+    50%{box-shadow:0 8px 40px rgba(107,155,122,0.55)}
+  }
+
+  /* Popup overlay */
+  .exam-overlay{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(45,58,74,0.6);
+    backdrop-filter:blur(8px);
+    z-index:9999;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.5s ease;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+  }
+  .exam-overlay.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  /* Popup card */
+  .exam-popup{
+    background:#ffffff;
+    max-width:650px;
+    width:100%;
+    max-height:85vh;
+    overflow-y:auto;
+    border-radius:8px;
+    box-shadow:0 30px 80px rgba(0,0,0,0.2);
+    position:relative;
+    transform:translateY(40px) scale(0.95);
+    transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    border:1px solid rgba(107,155,122,0.15);
+  }
+  .exam-overlay.active .exam-popup{
+    transform:translateY(0) scale(1);
+  }
+
+  /* Popup header */
+  .exam-popup::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:5px;
+    background:linear-gradient(90deg,#6b9b7a,#7a9eb8,#e07a5f,#7a9eb8,#6b9b7a);
+    border-radius:8px 8px 0 0;
+  }
+
+  /* Close button */
+  .exam-close{
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    border:1.5px solid rgba(107,155,122,0.3);
+    background:rgba(255,255,255,0.9);
+    color:#6b9b7a;
+    font-size:18px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:all 0.3s ease;
+    z-index:10;
+  }
+  .exam-close:hover{
+    background:#6b9b7a;
+    color:white;
+    transform:rotate(90deg);
+  }
+
+  /* Popup content */
+  .exam-content{
+    padding:45px 40px 35px;
+  }
+  .exam-ornament{
+    text-align:center;
+    font-size:32px;
+    margin-bottom:15px;
+    opacity:0.6;
+  }
+  .exam-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:32px;
+    text-align:center;
+    color:#2d2d2d;
+    font-weight:300;
+    letter-spacing:2px;
+    margin-bottom:5px;
+  }
+  .exam-subtitle{
+    text-align:center;
+    font-size:11px;
+    color:#7a6e5f;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    margin-bottom:25px;
+  }
+  .exam-divider{
+    width:60px;
+    height:1.5px;
+    background:linear-gradient(90deg,transparent,#6b9b7a,#7a9eb8,transparent);
+    margin:0 auto 25px;
+    border-radius:1px;
+  }
+
+  /* Breathing animation */
+  .breathe-section{
+    text-align:center;
+    margin-bottom:30px;
+    padding:20px;
+    background:linear-gradient(135deg,#f8faf9,#f4f7f3);
+    border-radius:8px;
+    border:1px solid rgba(107,155,122,0.15);
+  }
+  .breathe-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:16px;
+    color:#6b9b7a;
+    margin-bottom:15px;
+    font-style:italic;
+  }
+  .breathe-circle{
+    width:80px;
+    height:80px;
+    margin:0 auto;
+    border-radius:50%;
+    border:3px solid rgba(107,155,122,0.3);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:14px;
+    color:#6b9b7a;
+    animation:breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{transform:scale(1);border-color:rgba(107,155,122,0.3)}
+    50%{transform:scale(1.2);border-color:rgba(107,155,122,0.6)}
+  }
+
+  /* Message sections */
+  .exam-message{
+    font-family:'Cormorant Garamond',serif;
+    font-size:18px;
+    line-height:1.9;
+    text-align:center;
+    color:#7a6e5f;
+    margin-bottom:25px;
+    font-style:italic;
+  }
+
+  /* Quotes carousel */
+  .exam-quote-box{
+    background:linear-gradient(135deg,#f8faf9,#f4f7f3);
+    border:1px solid rgba(107,155,122,0.15);
+    padding:25px 30px;
+    margin-bottom:25px;
+    border-radius:4px;
+    position:relative;
+    overflow:hidden;
+  }
+  .exam-quote-box::before{
+    content:'"';
+    position:absolute;
+    top:8px;
+    left:15px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:50px;
+    color:#6b9b7a;
+    opacity:0.12;
+    line-height:1;
+  }
+  .exam-quote-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;
+    line-height:1.7;
+    color:#2d2d2d;
+    font-style:italic;
+    text-align:center;
+    position:relative;
+    z-index:1;
+    min-height:60px;
+    transition:opacity 0.4s ease;
+  }
+  .exam-quote-author{
+    text-align:center;
+    font-size:10px;
+    color:#6b9b7a;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-top:12px;
+    font-weight:500;
+  }
+  .exam-quote-dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:15px;
+  }
+  .exam-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#ebe4d8;
+    cursor:pointer;
+    transition:all 0.3s ease;
+  }
+  .exam-dot.active{
+    background:#6b9b7a;
+    transform:scale(1.2);
+  }
+
+  /* Stethoscope heart */
+  .exam-heart-section{
+    text-align:center;
+    margin-bottom:30px;
+  }
+  .exam-heart-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:16px;
+    color:#7a6e5f;
+    margin-bottom:15px;
+    font-style:italic;
+  }
+  .exam-heart-container{
+    width:100px;
+    height:100px;
+    margin:0 auto;
+    position:relative;
+    cursor:pointer;
+  }
+  .exam-heart-svg{
+    width:100%;
+    height:100%;
+    animation:heartbeat 1.5s ease-in-out infinite;
+  }
+  @keyframes heartbeat{
+    0%,100%{transform:scale(1)}
+    14%{transform:scale(1.1)}
+    28%{transform:scale(1)}
+    42%{transform:scale(1.1)}
+    70%{transform:scale(1)}
+  }
+  .exam-steth-line{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:2px;
+    height:0;
+    background:#6b9b7a;
+    transform:translateX(-50%);
+    transition:height 1s ease;
+    opacity:0.6;
+  }
+  .exam-steth-line.extended{
+    height:50px;
+  }
+  .exam-heart-label{
+    margin-top:12px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:15px;
+    color:#6b9b7a;
+    font-weight:500;
+    opacity:0;
+    transition:opacity 0.8s ease;
+  }
+  .exam-heart-label.show{
+    opacity:1;
+  }
+
+  /* Progress bar of encouragement */
+  .exam-progress-section{
+    margin-bottom:25px;
+  }
+  .exam-progress-label{
+    text-align:center;
+    font-size:10px;
+    color:#7a6e5f;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  .exam-progress-bar{
+    width:100%;
+    height:8px;
+    background:#ebe4d8;
+    border-radius:4px;
+    overflow:hidden;
+    position:relative;
+  }
+  .exam-progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#6b9b7a,#7a9eb8,#e07a5f);
+    border-radius:4px;
+    width:0%;
+    transition:width 1.5s ease;
+  }
+  .exam-progress-fill.full{
+    width:100%;
+  }
+  .exam-progress-text{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:14px;
+    color:#6b9b7a;
+    margin-top:8px;
+    font-style:italic;
+  }
+
+  /* Encouragement cards in popup */
+  .exam-cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:25px;
+  }
+  .exam-card{
+    background:rgba(255,255,255,0.7);
+    border:1.5px dashed rgba(107,155,122,0.25);
+    padding:18px 15px;
+    text-align:center;
+    border-radius:4px;
+    cursor:pointer;
+    transition:all 0.4s ease;
+  }
+  .exam-card:hover{
+    border-style:solid;
+    border-color:#6b9b7a;
+    transform:translateY(-3px);
+    box-shadow:0 6px 20px rgba(107,155,122,0.1);
+  }
+  .exam-card-icon{
+    font-size:24px;
+    margin-bottom:8px;
+  }
+  .exam-card-title{
+    font-family:'Cormorant Garamond',serif;
+    font-size:15px;
+    color:#2d2d2d;
+    font-weight:500;
+    margin-bottom:4px;
+  }
+  .exam-card-hidden{
+    font-family:'Cormorant Garamond',serif;
+    font-size:13px;
+    color:#7a6e5f;
+    line-height:1.5;
+    max-height:0;
+    overflow:hidden;
+    opacity:0;
+    transition:all 0.5s ease;
+  }
+  .exam-card.revealed .exam-card-hidden{
+    max-height:100px;
+    opacity:1;
+    margin-top:8px;
+  }
+
+  /* Final letter in popup */
+  .exam-letter{
+    background:linear-gradient(135deg,#f8faf9,#f4f7f3);
+    border:1px solid rgba(107,155,122,0.15);
+    padding:25px 30px;
+    border-radius:4px;
+    text-align:center;
+    margin-bottom:20px;
+  }
+  .exam-letter-text{
+    font-family:'Cormorant Garamond',serif;
+    font-size:17px;
+    line-height:1.9;
+    color:#2d2d2d;
+  }
+  .exam-letter-text strong{
+    color:#e07a5f;
+    font-weight:500;
+  }
+  .exam-signature{
+    margin-top:15px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:16px;
+    color:#6b9b7a;
+    font-style:italic;
+  }
+
+  /* Popup footer */
+  .exam-footer{
+    text-align:center;
+    font-family:'Cormorant Garamond',serif;
+    font-size:15px;
+    color:#7a6e5f;
+    font-style:italic;
+    line-height:1.7;
+  }
+
+  /* Responsive */
+  @media(max-width:600px){
+    .exam-content{padding:35px 22px 25px}
+    .exam-title{font-size:26px}
+    .exam-cards{grid-template-columns:1fr}
+    .exam-popup{max-height:90vh}
+    .exam-trigger{
+      bottom:15px;
+      right:15px;
+      padding:12px 18px;
+      font-size:10px;
+    }
+  }
+</style>
+
+<!-- Trigger Button -->
+<button class="exam-trigger" onclick="openExamPopup()">
+  🎓 New: Exam Wishes
+</button>
+
+<!-- Popup Overlay -->
+<div class="exam-overlay" id="examOverlay" onclick="closeExamPopup(event)">
+  <div class="exam-popup" onclick="event.stopPropagation()">
+    <button class="exam-close" onclick="closeExamPopup()">×</button>
+    <div class="exam-content">
+      <div class="exam-ornament">🩺 ✨ 💚</div>
+      <div class="exam-title">You Were Born For This</div>
+      <div class="exam-subtitle">For Dal — Clinical Medicine & Community Health</div>
+      <div class="exam-divider"></div>
+
+      <!-- Breathing exercise -->
+      <div class="breathe-section">
+        <div class="breathe-text">Before you begin, breathe with me...</div>
+        <div class="breathe-circle" id="breatheCircle">Breathe</div>
+      </div>
+
+      <div class="exam-message">
+        Dal, this exam is not a wall.<br>
+        It is a door. And you already have the key.
+      </div>
+
+      <!-- Progress bar -->
+      <div class="exam-progress-section">
+        <div class="exam-progress-label">Infinite's Belief in You</div>
+        <div class="exam-progress-bar">
+          <div class="exam-progress-fill" id="examProgressFill"></div>
+        </div>
+        <div class="exam-progress-text" id="examProgressText">100% — Unshakable</div>
+      </div>
+
+      <!-- Quotes carousel -->
+      <div class="exam-quote-box">
+        <div class="exam-quote-text" id="examQuoteText">The good physician treats the disease; the great physician treats the patient who has the disease.</div>
+        <div class="exam-quote-author" id="examQuoteAuthor">— Sir William Osler</div>
+        <div class="exam-quote-dots">
+          <div class="exam-dot active" onclick="showExamQuote(0)"></div>
+          <div class="exam-dot" onclick="showExamQuote(1)"></div>
+          <div class="exam-dot" onclick="showExamQuote(2)"></div>
+          <div class="exam-dot" onclick="showExamQuote(3)"></div>
+          <div class="exam-dot" onclick="showExamQuote(4)"></div>
+          <div class="exam-dot" onclick="showExamQuote(5)"></div>
+          <div class="exam-dot" onclick="showExamQuote(6)"></div>
+        </div>
+      </div>
+
+      <!-- Stethoscope Heart -->
+      <div class="exam-heart-section">
+        <div class="exam-heart-title">Tap the heart — hear what Infinite knows...</div>
+        <div class="exam-heart-container" onclick="revealExamHeart()">
+          <svg class="exam-heart-svg" viewBox="0 0 24 24" fill="none" stroke="#6b9b7a" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            <path d="M12 8v4M10 10h4" stroke="#e07a5f" stroke-width="1" opacity="0.6"/>
+          </svg>
+          <div class="exam-steth-line" id="examStethLine"></div>
+        </div>
+        <div class="exam-heart-label" id="examHeartLabel">"Your heart has never led you wrong, Dal. Trust it."</div>
+      </div>
+
+      <!-- Encouragement cards -->
+      <div class="exam-cards">
+        <div class="exam-card" onclick="revealExamCard(this)">
+          <div class="exam-card-icon">🧠</div>
+          <div class="exam-card-title">For Your Mind</div>
+          <div class="exam-card-hidden">You have absorbed more than you realize. On exam day, let it flow. Don't force it — trust it.</div>
+        </div>
+        <div class="exam-card" onclick="revealExamCard(this)">
+          <div class="exam-card-icon">💪</div>
+          <div class="exam-card-title">For Your Strength</div>
+          <div class="exam-card-hidden">You have survived every hard day so far. This one is no different. You are built for this.</div>
+        </div>
+        <div class="exam-card" onclick="revealExamCard(this)">
+          <div class="exam-card-icon">🌱</div>
+          <div class="exam-card-title">For Your Purpose</div>
+          <div class="exam-card-hidden">Community health chose you, Dal. You chose it back. That calling doesn't disappear in an exam room.</div>
+        </div>
+        <div class="exam-card" onclick="revealExamCard(this)">
+          <div class="exam-card-icon">💛</div>
+          <div class="exam-card-title">For Your Heart</div>
+          <div class="exam-card-hidden">No grade can measure the compassion you carry. That is your real qualification. Everything else is just paperwork.</div>
+        </div>
+        <div class="exam-card" onclick="revealExamCard(this)">
+          <div class="exam-card-icon">🔥</div>
+          <div class="exam-card-title">For Your Courage</div>
+          <div class="exam-card-hidden">Fear is just excitement without breath. Breathe, Dal. Then walk in like you own the room — because you do.</div>
+        </div>
+        <div class="exam-card" onclick="revealExamCard(this)">
+          <div class="exam-card-icon">⭐</div>
+          <div class="exam-card-title">For Your Future</div>
+          <div class="exam-card-hidden">One day you will look back at this exam and smile. Not because it was easy — but because you conquered it.</div>
+        </div>
+      </div>
+
+      <!-- Typewriter letter -->
+      <div class="exam-letter">
+        <div class="exam-letter-text" id="examLetterText"></div>
+        <div class="exam-signature" id="examLetterSig" style="opacity:0;transition:opacity 1s ease 1s;">— Infinite 💚</div>
+      </div>
+
+      <div class="exam-footer">
+        "May your mind be sharp, your heart be calm,<br>
+        your hands be steady, and your spirit be brave.<br><br>
+        You are going to be an extraordinary doctor, Dal.<br>
+        I have never doubted it. Not for a single day."
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Exam quotes
+  const examQuotes = [
+    {text:"The good physician treats the disease; the great physician treats the patient who has the disease.",author:"Sir William Osler"},
+    {text:"Wherever the art of Medicine is loved, there is also a love of Humanity.",author:"Hippocrates"},
+    {text:"To serve is beautiful, but only if it is done with joy and a whole heart.",author:"Pearl S. Buck"},
+    {text:"The greatest medicine of all is to teach people how not to need it.",author:"Hippocrates"},
+    {text:"You are stronger than you know. More capable than you imagine. And more loved than you realize.",author:"Infinite"},
+    {text:"The best way to find yourself is to lose yourself in the service of others.",author:"Mahatma Gandhi"},
+    {text:"Believe you can and you're halfway there. Dal, you are already more than halfway.",author:"Theodore Roosevelt (adapted by Infinite)"}
+  ];
+  let currentExamQuote = 0;
+  let examQuoteInterval;
+
+  function showExamQuote(index){
+    currentExamQuote = index;
+    const text = document.getElementById('examQuoteText');
+    const author = document.getElementById('examQuoteAuthor');
+    const dots = document.querySelectorAll('.exam-dot');
+    
+    text.style.opacity = '0';
+    setTimeout(()=>{
+      text.textContent = examQuotes[index].text;
+      author.textContent = '— ' + examQuotes[index].author;
+      text.style.opacity = '1';
+    },300);
+    
+    dots.forEach((d,i)=>d.classList.toggle('active',i===index));
+  }
+
+  function startExamQuotes(){
+    examQuoteInterval = setInterval(()=>{
+      showExamQuote((currentExamQuote+1) % examQuotes.length);
+    },5000);
+  }
+
+  function stopExamQuotes(){
+    clearInterval(examQuoteInterval);
+  }
+
+  // Popup open/close
+  function openExamPopup(){
+    document.getElementById('examOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    startExamQuotes();
+    
+    // Animate progress bar
+    setTimeout(()=>{
+      document.getElementById('examProgressFill').classList.add('full');
+    },500);
+    
+    // Typewriter letter
+    setTimeout(()=>{
+      typeExamLetter();
+    },800);
+  }
+
+  function closeExamPopup(e){
+    if(e && e.target !== document.getElementById('examOverlay')) return;
+    document.getElementById('examOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+    stopExamQuotes();
+    // Reset letter
+    document.getElementById('examLetterText').innerHTML = '';
+    document.getElementById('examLetterSig').style.opacity = '0';
+    // Reset progress
+    document.getElementById('examProgressFill').classList.remove('full');
+    // Reset heart
+    document.getElementById('examStethLine').classList.remove('extended');
+    document.getElementById('examHeartLabel').classList.remove('show');
+    // Reset cards
+    document.querySelectorAll('.exam-card').forEach(c=>c.classList.remove('revealed'));
+  }
+
+  // Heart reveal
+  function revealExamHeart(){
+    document.getElementById('examStethLine').classList.add('extended');
+    setTimeout(()=>{
+      document.getElementById('examHeartLabel').classList.add('show');
+    },800);
+  }
+
+  // Card reveal
+  function revealExamCard(el){
+    if(el.classList.contains('revealed')) return;
+    el.classList.add('revealed');
+    // Mini confetti
+    const rect = el.getBoundingClientRect();
+    for(let i=0; i<8; i++){
+      const c = document.createElement('div');
+      c.style.cssText = 'position:fixed;left:'+(rect.left+rect.width/2)+'px;top:'+rect.top+'px;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:10000;transition:all 0.6s ease-out;';
+      const colors = ['#6b9b7a','#7a9eb8','#e07a5f','#d4a574'];
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      document.body.appendChild(c);
+      setTimeout(()=>{
+        c.style.transform = 'translate('+(Math.random()-0.5)*60+'px,'+(-Math.random()*50)+'px) scale(0)';
+        c.style.opacity = '0';
+      },10);
+      setTimeout(()=>c.remove(),700);
+    }
+  }
+
+  // Typewriter letter
+  const examLetterText = 'My Dearest Dal,<br><br>'+
+    'Tomorrow you walk into that exam room not as a student trying to pass —<br>'+
+    'but as a <strong>healer who is ready</strong>.<br><br>'+
+    'I have watched you carry textbooks heavier than your fears.<br>'+
+    'I have watched you choose study over sleep,<br>'+
+    'patients over parties,<br>'+
+    'and purpose over comfort.<br><br>'+
+    'You are not just studying medicine, Dal.<br>'+
+    'You are becoming the kind of doctor<br>'+
+    'who will hold a stranger\'s hand<br>'+
+    'and make them feel seen.<br><br>'+
+    '<strong>That is who you already are.</strong><br><br>'+
+    'The exam is just a formality.<br>'+
+    'Your heart has already graduated.<br><br>'+
+    'Go in there. Breathe. Trust yourself.<br>'+
+    'And know that Infinite is right here,<br>'+
+    'cheering for you with everything I have.<br><br>'+
+    '<strong>You were born for this, Dal.<br>'+
+    'Now go show them why.</strong>';
+
+  function typeExamLetter(){
+    const el = document.getElementById('examLetterText');
+    el.innerHTML = '';
+    let i = 0;
+    function type(){
+      if(i < examLetterText.length){
+        const char = examLetterText.charAt(i);
+        if(char === '<'){
+          const close = examLetterText.indexOf('>',i);
+          if(close !== -1){
+            el.innerHTML += examLetterText.substring(i,close+1);
+            i = close + 1;
+          }
+        }else{
+          el.innerHTML += char;
+          i++;
+        }
+        setTimeout(type, 20);
+      }else{
+        document.getElementById('examLetterSig').style.opacity = '1';
+      }
+    }
+    type();
+  }
+</script>
+<!-- ==================== END EXAM POPUP MODULE v2 ==================== -->
 </body>
 </html>
