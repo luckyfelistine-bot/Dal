@@ -1,8 +1,9 @@
 // ===================== PIN PAD & HEAVEN GATE =====================
-const CORRECT_PIN = '2007';
-let gateUnlocked = false;
-let currentPin = '';
-let isProcessing = false;
+// These must be window-global for onclick handlers to work
+window.CORRECT_PIN = '2007';
+window.gateUnlocked = false;
+window.currentPin = '';
+window.isProcessing = false;
 
 function generateGateStars() {
   const container = document.getElementById('gateStars');
@@ -19,41 +20,40 @@ function generateGateStars() {
     container.appendChild(star);
   }
 }
-generateGateStars();
 
 // Handle keyboard input for PIN
-document.addEventListener('keydown', (e) => {
-  if (gateUnlocked || isProcessing) return;
+document.addEventListener('keydown', function(e) {
+  if (window.gateUnlocked || window.isProcessing) return;
   const gate = document.getElementById('heavenGate');
   if (!gate || gate.style.display === 'none') return;
 
   if (e.key >= '0' && e.key <= '9') {
     e.preventDefault();
-    pressPinKey(e.key);
+    window.pressPinKey(e.key);
   } else if (e.key === 'Backspace') {
     e.preventDefault();
-    clearPin();
+    window.clearPin();
   } else if (e.key === 'Escape') {
     e.preventDefault();
-    clearPin();
+    window.clearPin();
   }
 });
 
-function pressPinKey(digit) {
-  if (gateUnlocked || isProcessing) return;
-  if (currentPin.length >= 4) return;
+window.pressPinKey = function(digit) {
+  if (window.gateUnlocked || window.isProcessing) return;
+  if (window.currentPin.length >= 4) return;
 
-  currentPin += digit;
-  updatePinDots();
+  window.currentPin += digit;
+  window.updatePinDots();
 
   // Animate the key press
   const keys = document.querySelectorAll('.pin-key');
-  keys.forEach(key => {
+  keys.forEach(function(key) {
     if (key.textContent === digit) {
       key.style.transform = 'scale(0.9)';
       key.style.background = 'rgba(244,208,63,0.3)';
       key.style.borderColor = 'var(--gold)';
-      setTimeout(() => {
+      setTimeout(function() {
         key.style.transform = '';
         key.style.background = '';
         key.style.borderColor = '';
@@ -62,55 +62,53 @@ function pressPinKey(digit) {
   });
 
   // Check if PIN is complete
-  if (currentPin.length === 4) {
-    setTimeout(() => checkPin(), 300);
+  if (window.currentPin.length === 4) {
+    setTimeout(function() { window.checkPin(); }, 300);
   }
-}
+};
 
-function clearPin() {
-  if (gateUnlocked || isProcessing) return;
-  currentPin = '';
-  updatePinDots();
+window.clearPin = function() {
+  if (window.gateUnlocked || window.isProcessing) return;
+  window.currentPin = '';
+  window.updatePinDots();
   const error = document.getElementById('gateError');
   if (error) error.classList.remove('show');
-}
+};
 
-function updatePinDots() {
+window.updatePinDots = function() {
   for (let i = 0; i < 4; i++) {
     const dot = document.getElementById('pinDot' + i);
     if (dot) {
-      dot.classList.toggle('filled', i < currentPin.length);
+      dot.classList.toggle('filled', i < window.currentPin.length);
       dot.classList.remove('correct', 'wrong');
     }
   }
-}
+};
 
-function checkPin() {
-  if (isProcessing) return;
-  isProcessing = true;
+window.checkPin = function() {
+  if (window.isProcessing) return;
+  window.isProcessing = true;
 
   const error = document.getElementById('gateError');
   const gate = document.getElementById('heavenGate');
 
-  if (currentPin === CORRECT_PIN) {
-    // CORRECT — Show green dots
+  if (window.currentPin === window.CORRECT_PIN) {
+    // CORRECT
     for (let i = 0; i < 4; i++) {
       const dot = document.getElementById('pinDot' + i);
       if (dot) dot.classList.add('correct');
     }
     if (error) error.classList.remove('show');
 
-    // Fade out PIN area
     const pinArea = document.getElementById('gatePinArea');
     if (pinArea) pinArea.classList.add('fade-out');
 
-    // Start unlock sequence
-    setTimeout(() => {
-      unlockGateSequence();
+    setTimeout(function() {
+      window.unlockGateSequence();
     }, 500);
 
   } else {
-    // WRONG — Show red dots and shake
+    // WRONG
     for (let i = 0; i < 4; i++) {
       const dot = document.getElementById('pinDot' + i);
       if (dot) {
@@ -120,67 +118,56 @@ function checkPin() {
     }
     if (error) error.classList.add('show');
 
-    // Shake the keypad
     const keypad = document.querySelector('.pin-keypad');
     if (keypad) {
       keypad.style.animation = 'pinShake 0.4s ease';
-      setTimeout(() => { keypad.style.animation = ''; }, 400);
+      setTimeout(function() { keypad.style.animation = ''; }, 400);
     }
 
-    // Clear after delay
-    setTimeout(() => {
-      currentPin = '';
-      updatePinDots();
+    setTimeout(function() {
+      window.currentPin = '';
+      window.updatePinDots();
       if (error) error.classList.remove('show');
-      isProcessing = false;
+      window.isProcessing = false;
     }, 1200);
   }
-}
+};
 
-function unlockGateSequence() {
-  gateUnlocked = true;
+window.unlockGateSequence = function() {
+  window.gateUnlocked = true;
   const gate = document.getElementById('heavenGate');
 
-  // PHASE 1: Lock glows gold
   const lockGlow = document.getElementById('lockGlow');
   if (lockGlow) lockGlow.classList.add('active');
 
-  // PHASE 2: Lock shackle opens
-  setTimeout(() => {
+  setTimeout(function() {
     const shackle = document.getElementById('lockShackle');
     if (shackle) shackle.classList.add('open');
 
-    // Lock fades
-    setTimeout(() => {
+    setTimeout(function() {
       const lockEl = document.getElementById('gateLock');
       if (lockEl) lockEl.classList.add('unlocked');
 
-      // PHASE 3: Gates swing open
-      setTimeout(() => {
+      setTimeout(function() {
         const leftGate = document.getElementById('gateLeft');
         const rightGate = document.getElementById('gateRight');
         if (leftGate) leftGate.classList.add('open');
         if (rightGate) rightGate.classList.add('open');
 
-        // Burst particles
-        burstGateParticles();
+        window.burstGateParticles();
 
-        // PHASE 4: Show welcome text
-        setTimeout(() => {
+        setTimeout(function() {
           const welcome = document.getElementById('gateWelcome');
           if (welcome) welcome.classList.add('show');
 
-          // PHASE 5: Fade out gate entirely
-          setTimeout(() => {
+          setTimeout(function() {
             gate.classList.add('unlocked');
 
-            // Remove gate from DOM after fade
-            setTimeout(() => {
+            setTimeout(function() {
               gate.style.display = 'none';
               showToast('Welcome home, Dal 💫');
 
-              // Reveal hero
-              setTimeout(() => {
+              setTimeout(function() {
                 document.getElementById('loader').classList.add('hidden');
                 const eyebrow = document.getElementById('heroEyebrow');
                 const name = document.getElementById('heroName');
@@ -203,9 +190,9 @@ function unlockGateSequence() {
     }, 400);
 
   }, 600);
-}
+};
 
-function burstGateParticles() {
+window.burstGateParticles = function() {
   const emojis = ['✨', '💫', '💖', '💛', '🌟', '✦', '💫', '💖'];
   const colors = ['#ffd6e0', '#e2d5f8', '#f4d03f', '#f8b4c0', '#c8e6c9'];
 
@@ -222,13 +209,15 @@ function burstGateParticles() {
     p.style.animationDelay = (Math.random() * 0.5) + 's';
     document.body.appendChild(p);
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(function() {
       p.classList.add('burst');
     });
 
-    setTimeout(() => p.remove(), 2500);
+    setTimeout(function() { p.remove(); }, 2500);
   }
-}
+};
+
+generateGateStars();
 
 // ===================== AUDIO ENGINE =====================
 const audioPlayer = document.getElementById('audioPlayer');
@@ -823,8 +812,8 @@ function showToast(msg) {
 }
 
 // ===================== KEYBOARD NAVIGATION =====================
-document.addEventListener('keydown', (e) => {
-  if (!gateUnlocked) {
+document.addEventListener('keydown', function(e) {
+  if (!window.gateUnlocked) {
     // PIN input is handled in the PIN section above
     return;
   }
