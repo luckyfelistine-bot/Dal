@@ -854,24 +854,24 @@ const EVENTS = [
     subtitle: 'For Dal — Clinical Medicine & Community Health',
     breathe: { text: 'Before you begin, breathe with me...', label: 'Breathe' },
     message: 'Dal, this exam is not a wall. It is a door. And you already have the key.',
-    progress: { label: 'Infinite's Belief in You', text: '100% — Unshakable' },
+    progress: { label: "Infinite's Belief in You", text: "100% — Unshakable" },
     quotes: [
       { text: 'The good physician treats the disease; the great physician treats the patient who has the disease.', author: 'Sir William Osler' },
-      { text: 'Wherever the art of Medicine is loved, there is also a love of Humanity.', author: 'Hippocrates' },
+      { text: "Wherever the art of Medicine is loved, there is also a love of Humanity.", author: "Hippocrates" },
       { text: 'To serve is beautiful, but only if it is done with joy and a whole heart.', author: 'Pearl S. Buck' },
-      { text: 'The greatest medicine of all is to teach people how not to need it.', author: 'Hippocrates' },
+      { text: "The greatest medicine of all is to teach people how not to need it.", author: "Hippocrates" },
       { text: 'You are stronger than you know. More capable than you imagine. And more loved than you realize.', author: 'Infinite' },
       { text: 'The best way to find yourself is to lose yourself in the service of others.', author: 'Mahatma Gandhi' },
-      { text: 'Believe you can and you're halfway there. Dal, you are already more than halfway.', author: 'Theodore Roosevelt (adapted by Infinite)' }
+      { text: "Believe you can and you're halfway there. Dal, you are already more than halfway.", author: "Theodore Roosevelt (adapted by Infinite)" }
     ],
     heart: {
       title: 'Tap the heart — hear what Infinite knows...',
       label: '"Your heart has never led you wrong, Dal. Trust it."'
     },
     cards: [
-      { icon: '🧠', title: 'For Your Mind', hidden: 'You have absorbed more than you realize. On exam day, let it flow. Don't force it — trust it.' },
+      { icon: "🧠", title: "For Your Mind", hidden: "You have absorbed more than you realize. On exam day, let it flow. Don't force it — trust it." },
       { icon: '💪', title: 'For Your Strength', hidden: 'You have survived every hard day so far. This one is no different. You are built for this.' },
-      { icon: '🌱', title: 'For Your Purpose', hidden: 'Community health chose you, Dal. You chose it back. That calling doesn't disappear in an exam room.' },
+      { icon: "🌱", title: "For Your Purpose", hidden: "Community health chose you, Dal. You chose it back. That calling doesn't disappear in an exam room." },
       { icon: '💛', title: 'For Your Heart', hidden: 'No grade can measure the compassion you carry. That is your real qualification. Everything else is just paperwork.' },
       { icon: '🔥', title: 'For Your Courage', hidden: 'Fear is just excitement without breath. Breathe, Dal. Then walk in like you own the room — because you do.' },
       { icon: '⭐', title: 'For Your Future', hidden: 'One day you will look back at this exam and smile. Not because it was easy — but because you conquered it.' }
@@ -885,7 +885,7 @@ patients over parties,<br>
 and purpose over comfort.<br><br>
 You are not just studying medicine, Dal.<br>
 You are becoming the kind of doctor<br>
-who will hold a stranger's hand<br>
+who will hold a stranger\'s hand<br>
 and make them feel seen.<br><br>
 <strong>That is who you already are.</strong><br><br>
 The exam is just a formality.<br>
