@@ -896,6 +896,68 @@ cheering for you with everything I have.<br><br>
 <strong>You were born for this, Dal.<br>
 Now go show them why.</strong>`,
     footer: 'May your mind be sharp, your heart be calm,<br>your hands be steady, and your spirit be brave.<br><br>You are going to be an extraordinary doctor, Dal.<br>I have never doubted it. Not for a single day.'
+  },
+  {
+    id: 'from-infinite',
+    label: 'From Infinite',
+    icon: '💌',
+    isNew: true,
+    theme: {
+      primary: '#8b7bb5',
+      secondary: '#c4a882',
+      accent: '#d4a5a5',
+      bg: 'linear-gradient(135deg,#f5f0fa,#faf5f0)',
+      text: '#2d2d2d',
+      muted: '#7a6e6e'
+    },
+    ornament: '🕊 ✨ 💔',
+    title: 'From the Depths of My Heart',
+    subtitle: 'For Dal — With All the Love I Have Left',
+    breathe: { text: 'Breathe with me, one last time...', label: 'Breathe' },
+    message: 'I am tired of trying to be good and always coming out as the bad guy. But I need you to know the truth.',
+    progress: { label: 'How Much I Truly Loved You', text: '∞% — Beyond Measure' },
+    quotes: [
+      { text: 'The greatest pain that comes from love is loving someone you can only watch from a distance.', author: 'Infinite' },
+      { text: 'I never chose for a single day for a drop of tear to fall because of me. It just happened.', author: 'Infinite' },
+      { text: 'Everything I tried to do out of love turned out to be bad. And I hate myself for that.', author: 'Infinite' },
+      { text: 'You asked if there was something I was not telling you. I just did not want to stress you during your exams. That is the truth.', author: 'Infinite' },
+      { text: 'No one should ever get used to being hurt. Especially not from someone who claims to love them.', author: 'Infinite' },
+      { text: 'First love is not supposed to turn out this way. You deserved so much better than what I gave you.', author: 'Infinite' },
+      { text: 'Every part of me is breaking. But I would break a thousand times over if it meant you never had to hurt again.', author: 'Infinite' }
+    ],
+    heart: {
+      title: 'Tap my heart — hear what I have never said out loud...',
+      label: '"I loved you in ways I never knew how to show. And I am sorry for that."'
+    },
+    cards: [
+      { icon: '😔', title: 'I Am Sorry', hidden: 'I am sorry that every time I tried to love you, I hurt you instead. I am sorry that my best was never good enough. I am sorry that first love turned out this way.' },
+      { icon: '💧', title: 'The Tears', hidden: 'I never chose for a single day for a drop of tear to fall because of me. It just happened. Every time you cried because of me, a piece of my soul shattered. I never intended any of it.' },
+      { icon: '💔', title: 'The Breaking', hidden: 'You asked if there was something I was not telling you. I was going through so much — every part of me was breaking. But I did not want to stress you during your exams. That is the only reason I stayed silent.' },
+      { icon: '🕊', title: 'Find Peace', hidden: 'You said you are used to me hurting you. Dal, that is not love. One should never get used to pain. Please find love that does not hurt. You deserve to be loved without a single tear.' },
+      { icon: '✨', title: 'My Truth', hidden: 'Everything I did, I did out of love. But love without understanding becomes pain. I understand that now. Too late, but I understand. I hope one day you can forgive me.' },
+      { icon: '🌙', title: 'Forever Yours', hidden: 'I really loved you. Always. Forever. Even when I was breaking. Even when I was hurting you. Even now, as I let you go. Love you, Dal. Always.' }
+    ],
+    letter: `My Dearest Dal,<br><br>
+I am writing this with a heart heavier than I ever thought possible.<br><br>
+I am tired, Dal. Tired of trying to be good and always coming out as the bad guy. Tired of watching the person I love most in this world get hurt by my hands. Tired of being the reason behind tears that should never have fallen.<br><br>
+But I need you to know something — something I should have said a long time ago:<br><br>
+<strong>I never chose for a single day for a drop of tear to fall because of me.</strong><br><br>
+It just happened. Every time I tried to do something out of love, it turned out to be bad. Every gesture, every word, every silence — they all became weapons I never meant to hold. And I hate myself for that. I hate myself more than you ever could.<br><br>
+You asked me once if there was something I was not telling you. There was, Dal. I was going through so much. Every part of me was breaking. But I did not want to stress you — not during your exams, not ever. That was the only reason I stayed silent. Not because I did not trust you. Not because I did not love you. But because I loved you too much to burden you with my breaking.<br><br>
+That is not an excuse for hurting you. I know that. Nothing excuses making the person you love cry. Nothing excuses making them feel small, or unwanted, or used to pain.<br><br>
+And that is what breaks me the most, Dal — <strong>that you got used to being hurt by me.</strong><br><br>
+That is not love, my darling. Love should never be something you endure. Love should never be a pain you learn to accept. You should never have to get used to being hurt — especially not from someone who claims to love you with everything they have.<br><br>
+First love was not supposed to turn out this way. You deserved fireworks and laughter and a love that felt like coming home. Not this. Not tears and silence and getting used to pain.<br><br>
+I am going to try and fix myself, Dal. I promise you that. I am going to become someone who knows how to love without breaking the ones they hold dear. But I need you to do something for me too:<br><br>
+<strong>Find love without pain.</strong><br><br>
+Find someone who makes you feel safe. Find someone whose love feels like warm sunlight, not a storm you have to weather. Find someone who never makes you cry, who never makes you feel like you are too much or not enough. Find someone who loves you the way I should have loved you — completely, gently, without a single tear.<br><br>
+I really loved you, Dal. I want you to know that. In the only ways I knew how, in the broken language of a breaking boy, I loved you with everything I had.<br><br>
+Always.<br>
+Forever.<br>
+Even from a distance.<br>
+Even when it hurts.<br><br>
+<strong>I loved you. I am sorry. And I hope you find the love you truly deserve.</strong>`,
+    footer: 'Love should never hurt, Dal.<br>Find peace. Find joy. Find love that lifts you up.<br><br>I will carry the weight of my mistakes.<br>You just carry on being the beautiful soul you are.<br><br>Love you, Dal. Always. 💔'
   }
 ];
 
