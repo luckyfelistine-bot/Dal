@@ -932,7 +932,8 @@ Now go show them why.</strong>`,
       'Images/Perfect.jpg',
       'Images/Queen 👑.jpg'
     ]
-  };
+  }
+];
 
 // ===================== EVENTS RENDERER =====================
 function renderEventButtons() {
