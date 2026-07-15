@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/luckyfelistine-bot/Dal/main/Images/Beautiful.jpeg" width="200" style="border-radius: 50%; box-shadow: 0 0 40px rgba(232, 160, 191, 0.5);" />
+<img src="https://raw.githubusercontent.com/luckyfelistine-bot/Dal/main/Images/Beautiful.jpeg" width="180" style="border-radius: 50%; box-shadow: 0 0 50px rgba(232, 160, 191, 0.6);" />
 
 # 💫 Happy Birthday Dal 💫
 
@@ -46,37 +46,32 @@ A deeply personal, interactive love experience featuring a heaven gate PIN syste
 | 🎵 **Music** | Custom playlist with visualizer and progress bar |
 | ⏰ **Countdown** | Counting down to the next birthday |
 
-### 🌌 Universe of Love *(New!)*
-A **cosmic particle engine** that replaces sadness with stardust:
+### 🌌 Universe of Love
+A **cosmic particle engine** built from scratch:
 - 🕳️ **Supermassive Black Hole** with photon ring, accretion disk & gravitational lensing
 - 💖 **80 Love Emojis** spiraling out from the singularity
-- 🌀 **3 Pattern Formations**: Heart shape → Infinity symbol → Constellation (connected by glowing lines)
+- 🌀 **3 Pattern Formations**: Heart shape → Infinity symbol → Constellation
 - ♾️ **Infinite Cycle**: Spiral → Pattern → Hold → Dissolve → Repeat forever
-- 🖱️ **Mouse Gravity**: Particles are gently attracted to your cursor
-- 💥 **Click Ripples**: Burst particles anywhere you click
+- 🖱️ **Mouse Gravity**: Particles attracted to your cursor
+- 💥 **Click Ripples**: Burst particles anywhere
 - 💫 **Shooting Stars** with colored trails
 - 👻 **Ghost Texts**: Ethereal love phrases floating in the void
-- 💌 **Love Letters**: 12 cosmic messages type out with a blinking cursor
-- 📸 **Memory Stars**: Your photos fade in as floating polaroids
-- ⚡ **Warp Speed**: Tap the center heart for a light-speed burst
-- 📱 **Fully Responsive**: Perfect on mobile with touch support
+- 💌 **Love Letters**: 12 cosmic messages type out with blinking cursor
+- 📸 **Memory Stars**: Photos fade in as floating polaroids
+- ⚡ **Warp Speed**: Tap the center heart for light-speed burst
+- 📱 **Fully Responsive**: Touch support on mobile
 
 ### 🎓 Exam Wishes Event
-- A dedicated event for Dal's Clinical Medicine & Community Health exams
-- Breathing exercise, progress bar, quotes, reveal cards, and a heartfelt letter
+- Breathing exercise, progress bar, quotes, reveal cards, heartfelt letter
+- **Click the breathe circle** to start a guided breathing animation
 
 ---
 
 ## 🚀 Quick Start
 
 ### Option 1: Open Directly
-Simply open `index.html` in any modern browser. No build step, no server needed.
-
 ```bash
-# Clone the repository
 git clone https://github.com/luckyfelistine-bot/Dal.git
-
-# Open in browser
 cd Dal
 open index.html        # macOS
 start index.html       # Windows
@@ -84,20 +79,10 @@ xdg-open index.html    # Linux
 ```
 
 ### Option 2: Local Server (Recommended)
-For the best experience with audio and smooth animations:
-
 ```bash
-# Python 3
 python -m http.server 8080
-
-# Node.js
-npx serve .
-
-# PHP
-php -S localhost:8080
+# Visit http://localhost:8080
 ```
-
-Then visit `http://localhost:8080`
 
 ---
 
@@ -125,33 +110,21 @@ Dal/
 ## 🎨 Customization
 
 ### Change the PIN
-In `main.js`, find:
 ```javascript
-const CORRECT_PIN = '****';
+const CORRECT_PIN = '2007';
 ```
 
 ### Add More Events
-The modular `EVENTS` array in `main.js` makes it effortless:
+The modular `EVENTS` array auto-generates buttons and popups:
 ```javascript
 const EVENTS = [
   { id: 'exam-wishes', label: 'Exam Wishes', icon: '🎓', ... },
   { id: 'universe-of-love', label: 'Universe of Love', icon: '🌌', ... }
-  // Add your own event here!
 ];
 ```
-The system auto-generates buttons and popups. No HTML or CSS changes needed.
 
 ### Add More Love Letters
-In the `universe-of-love` event, expand the `loveLetters` array:
-```javascript
-loveLetters: [
-  "Your custom message here...",
-  "Another beautiful thought..."
-]
-```
-
-### Add More Memory Photos
-Drop images into the `Images/` folder and add their paths to the `memoryImages` array.
+Expand the `loveLetters` array in the `universe-of-love` event.
 
 ---
 
@@ -160,12 +133,43 @@ Drop images into the `Images/` folder and add their paths to the `memoryImages` 
 | Technology | Purpose |
 |-----------|---------|
 | **HTML5** | Semantic structure, canvas, audio |
-| **CSS3** | Animations, gradients, transforms, filters, custom properties |
-| **Vanilla JavaScript** | Particle systems, canvas rendering, DOM manipulation, audio API |
-| **Canvas 2D API** | Universe particle engine, fireworks, ambient background |
+| **CSS3** | Animations, gradients, transforms, filters |
+| **Vanilla JavaScript** | Particle systems, canvas rendering, DOM manipulation |
+| **Canvas 2D API** | Universe engine, fireworks, ambient background |
 | **Web Audio API** | Music player with visualizer |
-| **Intersection Observer** | Scroll-triggered animations |
+| **Intersection Observer** | Scroll-triggered animations, meter cleanup |
 | **requestAnimationFrame** | 60fps smooth animations |
+
+---
+
+## ♿ Accessibility
+
+- ✅ **Keyboard Navigation**: Arrow keys, Space (music), Escape (popup), PIN digits
+- ✅ **Focus Indicators**: Visible `:focus-visible` styles on all interactive elements
+- ✅ **Skip Link**: Jump to main content for screen readers
+- ✅ **Reduced Motion**: Respects `prefers-reduced-motion` — pauses canvas, disables animations
+- ✅ **Image Alt Text**: All gallery images have descriptive alt attributes
+- ✅ **Error Handling**: Images fail gracefully, audio has fallback toasts
+
+---
+
+## 🔧 Bug Fixes & Improvements
+
+| Fix | What Changed |
+|-----|-------------|
+| **Duplicate Event Listeners** | `setupCursorHover()` now uses a flag to prevent re-attachment |
+| **Memory Leak** | Infinity meter intervals clear when section scrolls out of view |
+| **Loader Safety** | Null check before accessing loader element |
+| **Song Bounds** | `loadSong()` validates index before accessing array |
+| **Universe Resize** | Only runs when universe popup is actually active |
+| **Escape Safety** | Only closes popup if it's actually open |
+| **PIN Animation** | Force reflow prevents animation interruption on rapid typing |
+| **Canvas Performance** | Ambient canvas pauses when browser tab is hidden |
+| **Breathe Circle** | Click to toggle a guided breathing animation |
+| **Energy Bar** | Pulses continuously after filling to 100% |
+| **Image Errors** | Gallery images hide gracefully if they fail to load |
+| **Focus Styles** | All interactive elements have visible focus indicators |
+| **Reduced Motion** | Full support for users who prefer less animation |
 
 ---
 

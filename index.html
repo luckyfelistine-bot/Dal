@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a href="#hero" class="skip-link">Skip to content</a>
 
 <!-- ===================== HEAVEN GATE ===================== -->
 <div class="heaven-gate" id="heavenGate">
@@ -172,7 +173,7 @@
 <!-- ===================== SECTION 1: HERO ===================== -->
 <section class="section" id="section0" style="padding:0">
   <div class="hero-bg">
-    <img src="Images/Perfect.jpg" alt="Dal" loading="eager">
+    <img src="Images/Perfect.jpg" alt="Dal" loading="eager" onerror="this.style.background='linear-gradient(135deg,#1a1520,#302b63)';this.style.minHeight='100vh'">
   </div>
   <div class="hero-content">
     <div class="hero-eyebrow" id="heroEyebrow">A Celebration of You</div>
@@ -317,10 +318,10 @@
     <div class="gallery-title">Moments With You</div>
     <div class="gallery-sub">Every picture tells a story, and ours is my favorite</div>
     <div class="gallery-grid">
-      <div class="gallery-item" data-caption="Beautiful"><img src="Images/Beautiful.jpeg" alt="Beautiful" loading="lazy"></div>
-      <div class="gallery-item" data-caption="My Queen"><img src="Images/Queen%20%F0%9F%91%91.jpg" alt="Queen" loading="lazy"></div>
-      <div class="gallery-item" data-caption="Charming"><img src="Images/Charming.jpg" alt="Charming" loading="lazy"></div>
-      <div class="gallery-item" data-caption="Cheerful"><img src="Images/Chearful.jpg" alt="Cheerful" loading="lazy"></div>
+      <div class="gallery-item" data-caption="Beautiful"><img src="Images/Beautiful.jpeg" alt="Beautiful" loading="lazy" onerror="this.style.display='none';this.parentElement.style.display='none'"></div>
+      <div class="gallery-item" data-caption="My Queen"><img src="Images/Queen%20%F0%9F%91%91.jpg" alt="Queen" loading="lazy" onerror="this.style.display='none';this.parentElement.style.display='none'"></div>
+      <div class="gallery-item" data-caption="Charming"><img src="Images/Charming.jpg" alt="Charming" loading="lazy" onerror="this.style.display='none';this.parentElement.style.display='none'"></div>
+      <div class="gallery-item" data-caption="Cheerful"><img src="Images/Chearful.jpg" alt="Cheerful" loading="lazy" onerror="this.style.display='none';this.parentElement.style.display='none'"></div>
       <div class="gallery-item" data-caption="Perfect"><img src="Images/Perfect.jpg" alt="Perfect" loading="lazy"></div>
     </div>
   </div>

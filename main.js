@@ -120,6 +120,8 @@ window.checkPin = function() {
 
     const keypad = document.querySelector('.pin-keypad');
     if (keypad) {
+      keypad.style.animation = 'none';
+      keypad.offsetHeight;
       keypad.style.animation = 'pinShake 0.4s ease';
       setTimeout(function() { keypad.style.animation = ''; }, 400);
     }
@@ -168,7 +170,7 @@ window.unlockGateSequence = function() {
               showToast('Welcome home, Dal 💫');
 
               setTimeout(function() {
-                document.getElementById('loader').classList.add('hidden');
+                const loaderEl = document.getElementById('loader'); if (loaderEl) loaderEl.classList.add('hidden');
                 const eyebrow = document.getElementById('heroEyebrow');
                 const name = document.getElementById('heroName');
                 const sub = document.getElementById('heroSub');
@@ -246,6 +248,10 @@ const songs = [
 ];
 
 function loadSong(index) {
+  if (index < 0 || index >= songs.length) {
+    console.warn('Invalid song index:', index);
+    return;
+  }
   currentSongIndex = index;
   if (!audioPlayer) return;
   audioPlayer.src = songs[index].src;
@@ -378,7 +384,10 @@ function animateOutline() {
 document.addEventListener('mousemove', updateCursor);
 animateOutline();
 
+let cursorHoverSetupDone = false;
 function setupCursorHover() {
+  if (cursorHoverSetupDone) return;
+  cursorHoverSetupDone = true;
   const selectors = 'button,.candle-3d,.gift-box-3d,.gallery-item,.message-card,.nav-dot,.meter-heart,.playlist-item,.music-progress,.event-btn,.event-card,.event-dot,.event-close,.event-heart-container,.gate-input,.universe-center-heart';
   document.querySelectorAll(selectors).forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
@@ -431,6 +440,11 @@ for (let i = 0; i < 100; i++) ambientParticles.push(new AmbientParticle());
 let ambientFrame = 0;
 function animateAmbient() {
   if (!actx || !ambientCanvas) return;
+  if (document.hidden) {
+    ambientFrame++;
+    requestAnimationFrame(animateAmbient);
+    return;
+  }
   actx.clearRect(0, 0, ambientW, ambientH);
   ambientParticles.forEach(p => { p.update(); p.draw(); });
   if (ambientFrame % 2 === 0) {
@@ -511,6 +525,7 @@ function startInfinityMeter() {
   const desc = document.getElementById('meterDesc');
   const wrap = document.getElementById('meterHeartWrap');
   const particlesBox = document.getElementById('meterParticles');
+  const section = document.getElementById('loveMeter');
 
   if (!fill || !pctEl || !desc) return;
   fill.style.width = '100%';
@@ -537,6 +552,18 @@ function startInfinityMeter() {
       }, 800);
     }
   }, 25);
+
+  if (section && 'IntersectionObserver' in window) {
+    const meterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          if (meterInterval) { clearInterval(meterInterval); meterInterval = null; }
+          if (meterSparkleInterval) { clearInterval(meterSparkleInterval); meterSparkleInterval = null; }
+        }
+      });
+    }, { threshold: 0.1 });
+    meterObserver.observe(section);
+  }
 }
 
 function startMeterSparkles(container) {
@@ -827,7 +854,10 @@ document.addEventListener('keydown', function(e) {
     e.preventDefault();
     toggleMusicPlayer();
   } else if (e.key === 'Escape') {
-    closeEventPopup();
+    const overlay = document.getElementById('eventOverlay');
+    if (overlay && overlay.classList.contains('active')) {
+      closeEventPopup();
+    }
   }
 });
 
@@ -979,6 +1009,19 @@ function openEventPopup(eventId) {
       showUniverseMemory();
     }, 300);
   } else {
+    setTimeout(() => {
+      const breatheCircle = document.getElementById('eventBreatheCircle');
+      if (breatheCircle) {
+        breatheCircle.addEventListener('click', function() {
+          this.classList.toggle('breathing-active');
+          if (this.classList.contains('breathing-active')) {
+            this.textContent = 'Breathe...';
+          } else {
+            this.textContent = evt.breathe ? evt.breathe.label : 'Breathe';
+          }
+        });
+      }
+    }, 100);
     startEventQuotes(evt);
 
     setTimeout(() => {
@@ -1243,7 +1286,9 @@ function buildUniverseEventHTML(evt) {
   `;
 }
 
+let universeActive = false;
 function initUniverseCanvas() {
+  universeActive = true;
   universeCanvas = document.getElementById('universeCanvas');
   if (!universeCanvas) return;
   universeCtx = universeCanvas.getContext('2d');
@@ -1334,7 +1379,10 @@ function initUniverseCanvas() {
   // Start energy bar animation
   setTimeout(() => {
     const fill = document.getElementById('universeEnergyFill');
-    if (fill) fill.classList.add('full');
+    if (fill) {
+      fill.classList.add('full');
+      setTimeout(() => { if (fill) fill.classList.add('pulsing'); }, 3000);
+    }
   }, 800);
 
   animateUniverse();
@@ -1357,6 +1405,7 @@ function createStarLayer(count, w, h, minSize, maxSize) {
 }
 
 function destroyUniverseCanvas() {
+  universeActive = false;
   if (universeAnimId) {
     cancelAnimationFrame(universeAnimId);
     universeAnimId = null;
@@ -1432,7 +1481,7 @@ function createRipple(x, y) {
 }
 
 function onUniverseResize() {
-  if (!universeCanvas) return;
+  if (!universeActive || !universeCanvas) return;
   const popup = document.querySelector('.event-popup');
   if (!popup) return;
   const rect = popup.getBoundingClientRect();

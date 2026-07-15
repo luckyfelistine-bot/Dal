@@ -1165,3 +1165,158 @@ body{
     letter-spacing: 3px;
   }
 }
+
+
+/* ===================== ACCESSIBILITY & FOCUS STYLES ===================== */
+
+button:focus-visible,
+.pin-key:focus-visible,
+.gate-input:focus-visible,
+.event-btn:focus-visible,
+.event-close:focus-visible,
+.event-card:focus-visible,
+.event-dot:focus-visible,
+.playlist-item:focus-visible,
+.candle-3d:focus-visible,
+.gift-box-3d:focus-visible,
+.gallery-item:focus-visible,
+.message-card:focus-visible,
+.nav-dot:focus-visible,
+.meter-heart:focus-visible,
+.music-progress:focus-visible,
+.universe-center-heart:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+  box-shadow: 0 0 20px rgba(244, 208, 63, 0.4);
+}
+
+input:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--gold);
+  color: var(--deep);
+  padding: 8px 16px;
+  z-index: 10000;
+  transition: top 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+
+/* ===================== BREATHE CIRCLE INTERACTION ===================== */
+
+.event-breathe-circle.breathing-active {
+  animation: breatheGuide 4s ease-in-out infinite;
+  border-color: rgba(107, 155, 122, 0.6);
+  box-shadow: 0 0 30px rgba(107, 155, 122, 0.3);
+  cursor: pointer;
+}
+
+@keyframes breatheGuide {
+  0%, 100% { transform: scale(1); border-color: rgba(107, 155, 122, 0.3); box-shadow: 0 0 10px rgba(107, 155, 122, 0.1); }
+  50% { transform: scale(1.3); border-color: rgba(107, 155, 122, 0.8); box-shadow: 0 0 40px rgba(107, 155, 122, 0.4); }
+}
+
+.event-breathe-circle {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.event-breathe-circle:hover {
+  border-color: rgba(107, 155, 122, 0.6);
+  box-shadow: 0 0 20px rgba(107, 155, 122, 0.2);
+}
+
+
+/* ===================== UNIVERSE ENERGY PULSE ===================== */
+
+.universe-energy-fill.pulsing {
+  animation: universeEnergyPulse 2s ease-in-out infinite;
+}
+
+@keyframes universeEnergyPulse {
+  0%, 100% { opacity: 0.7; box-shadow: 0 0 5px rgba(232, 160, 191, 0.3); }
+  50% { opacity: 1; box-shadow: 0 0 15px rgba(232, 160, 191, 0.6), 0 0 30px rgba(167, 139, 250, 0.3); }
+}
+
+.universe-pulse-indicator {
+  position: absolute;
+  bottom: 42px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 1s ease 3s;
+  z-index: 5;
+  animation: universePulseFloat 3s ease-in-out infinite;
+}
+
+.universe-energy-fill.full ~ .universe-pulse-indicator,
+.universe-energy-fill.pulsing ~ .universe-pulse-indicator {
+  opacity: 0.6;
+}
+
+@keyframes universePulseFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-3px); }
+}
+
+
+/* ===================== REDUCED MOTION ===================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .universe-canvas,
+  #ambientCanvas,
+  #fxCanvas {
+    display: none !important;
+  }
+
+  .universe-overlay,
+  .event-popup.universe-active .event-content {
+    background: linear-gradient(135deg, #1a0f3a, #302b63) !important;
+  }
+
+  .universe-center-heart {
+    animation: none !important;
+    filter: drop-shadow(0 0 10px rgba(232, 160, 191, 0.5)) !important;
+  }
+
+  .universe-heart-ring {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  .universe-memory {
+    opacity: 0.9 !important;
+    transform: none !important;
+  }
+
+  .event-breathe-circle.breathing-active {
+    animation: none !important;
+    transform: scale(1.2) !important;
+  }
+}
