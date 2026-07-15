@@ -111,7 +111,7 @@ Dal/
 
 ### Change the PIN
 ```javascript
-const CORRECT_PIN = '2007';
+const CORRECT_PIN = '****';
 ```
 
 ### Add More Events
