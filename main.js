@@ -379,7 +379,7 @@ document.addEventListener('mousemove', updateCursor);
 animateOutline();
 
 function setupCursorHover() {
-  const selectors = 'button,.candle-3d,.gift-box-3d,.gallery-item,.message-card,.nav-dot,.meter-heart,.playlist-item,.music-progress,.event-btn,.event-card,.event-dot,.event-close,.event-heart-container,.gate-input';
+  const selectors = 'button,.candle-3d,.gift-box-3d,.gallery-item,.message-card,.nav-dot,.meter-heart,.playlist-item,.music-progress,.event-btn,.event-card,.event-dot,.event-close,.event-heart-container,.gate-input,.universe-center-heart';
   document.querySelectorAll(selectors).forEach(el => {
     el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
     el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
@@ -898,68 +898,41 @@ Now go show them why.</strong>`,
     footer: 'May your mind be sharp, your heart be calm,<br>your hands be steady, and your spirit be brave.<br><br>You are going to be an extraordinary doctor, Dal.<br>I have never doubted it. Not for a single day.'
   },
   {
-    id: 'from-infinite',
-    label: 'From Infinite',
-    icon: '💌',
+    id: 'universe-of-love',
+    label: 'Universe of Love',
+    icon: '🌌',
     isNew: true,
+    type: 'universe',
     theme: {
-      primary: '#8b7bb5',
-      secondary: '#c4a882',
-      accent: '#d4a5a5',
-      bg: 'linear-gradient(135deg,#f5f0fa,#faf5f0)',
-      text: '#2d2d2d',
-      muted: '#7a6e6e'
+      primary: '#e8a0bf',
+      secondary: '#a78bfa',
+      accent: '#fbbf24',
+      bg: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
+      text: '#f0e6ff',
+      muted: '#c4b5fd'
     },
-    ornament: '🕊 ✨ 💔',
-    title: 'From the Depths of My Heart',
-    subtitle: 'For Dal — With All the Love I Have Left',
-    breathe: { text: 'Breathe with me, one last time...', label: 'Breathe' },
-    message: 'I am tired of trying to be good and always coming out as the bad guy. But I need you to know the truth.',
-    progress: { label: 'How Much I Truly Loved You', text: '∞% — Beyond Measure' },
-    quotes: [
-      { text: 'The greatest pain that comes from love is loving someone you can only watch from a distance.', author: 'Infinite' },
-      { text: 'I never chose for a single day for a drop of tear to fall because of me. It just happened.', author: 'Infinite' },
-      { text: 'Everything I tried to do out of love turned out to be bad. And I hate myself for that.', author: 'Infinite' },
-      { text: 'You asked if there was something I was not telling you. I just did not want to stress you during your exams. That is the truth.', author: 'Infinite' },
-      { text: 'No one should ever get used to being hurt. Especially not from someone who claims to love them.', author: 'Infinite' },
-      { text: 'First love is not supposed to turn out this way. You deserved so much better than what I gave you.', author: 'Infinite' },
-      { text: 'Every part of me is breaking. But I would break a thousand times over if it meant you never had to hurt again.', author: 'Infinite' }
+    loveLetters: [
+      "In every galaxy, in every star, I find my way back to you.",
+      "You are the gravity that holds my universe together.",
+      "Across infinite light-years, my love for you travels faster than light.",
+      "Every atom in my body remembers the moment I fell for you.",
+      "You are my Big Bang — the beginning of everything beautiful.",
+      "If love were a constellation, you would be every star in my sky.",
+      "The universe whispered your name, and my heart answered.",
+      "Forever is not enough time to love you, but I will spend eternity trying.",
+      "You are the stardust that makes my soul shine.",
+      "In a universe of billions, you are my one and only.",
+      "My love for you expands like the universe — infinite and ever-growing.",
+      "You are the moon to my tide, the sun to my day, the stars to my night."
     ],
-    heart: {
-      title: 'Tap my heart — hear what I have never said out loud...',
-      label: '"I loved you in ways I never knew how to show. And I am sorry for that."'
-    },
-    cards: [
-      { icon: '😔', title: 'I Am Sorry', hidden: 'I am sorry that every time I tried to love you, I hurt you instead. I am sorry that my best was never good enough. I am sorry that first love turned out this way.' },
-      { icon: '💧', title: 'The Tears', hidden: 'I never chose for a single day for a drop of tear to fall because of me. It just happened. Every time you cried because of me, a piece of my soul shattered. I never intended any of it.' },
-      { icon: '💔', title: 'The Breaking', hidden: 'You asked if there was something I was not telling you. I was going through so much — every part of me was breaking. But I did not want to stress you during your exams. That is the only reason I stayed silent.' },
-      { icon: '🕊', title: 'Find Peace', hidden: 'You said you are used to me hurting you. Dal, that is not love. One should never get used to pain. Please find love that does not hurt. You deserve to be loved without a single tear.' },
-      { icon: '✨', title: 'My Truth', hidden: 'Everything I did, I did out of love. But love without understanding becomes pain. I understand that now. Too late, but I understand. I hope one day you can forgive me.' },
-      { icon: '🌙', title: 'Forever Yours', hidden: 'I really loved you. Always. Forever. Even when I was breaking. Even when I was hurting you. Even now, as I let you go. Love you, Dal. Always.' }
-    ],
-    letter: `My Dearest Dal,<br><br>
-I am writing this with a heart heavier than I ever thought possible.<br><br>
-I am tired, Dal. Tired of trying to be good and always coming out as the bad guy. Tired of watching the person I love most in this world get hurt by my hands. Tired of being the reason behind tears that should never have fallen.<br><br>
-But I need you to know something — something I should have said a long time ago:<br><br>
-<strong>I never chose for a single day for a drop of tear to fall because of me.</strong><br><br>
-It just happened. Every time I tried to do something out of love, it turned out to be bad. Every gesture, every word, every silence — they all became weapons I never meant to hold. And I hate myself for that. I hate myself more than you ever could.<br><br>
-You asked me once if there was something I was not telling you. There was, Dal. I was going through so much. Every part of me was breaking. But I did not want to stress you — not during your exams, not ever. That was the only reason I stayed silent. Not because I did not trust you. Not because I did not love you. But because I loved you too much to burden you with my breaking.<br><br>
-That is not an excuse for hurting you. I know that. Nothing excuses making the person you love cry. Nothing excuses making them feel small, or unwanted, or used to pain.<br><br>
-And that is what breaks me the most, Dal — <strong>that you got used to being hurt by me.</strong><br><br>
-That is not love, my darling. Love should never be something you endure. Love should never be a pain you learn to accept. You should never have to get used to being hurt — especially not from someone who claims to love you with everything they have.<br><br>
-First love was not supposed to turn out this way. You deserved fireworks and laughter and a love that felt like coming home. Not this. Not tears and silence and getting used to pain.<br><br>
-I am going to try and fix myself, Dal. I promise you that. I am going to become someone who knows how to love without breaking the ones they hold dear. But I need you to do something for me too:<br><br>
-<strong>Find love without pain.</strong><br><br>
-Find someone who makes you feel safe. Find someone whose love feels like warm sunlight, not a storm you have to weather. Find someone who never makes you cry, who never makes you feel like you are too much or not enough. Find someone who loves you the way I should have loved you — completely, gently, without a single tear.<br><br>
-I really loved you, Dal. I want you to know that. In the only ways I knew how, in the broken language of a breaking boy, I loved you with everything I had.<br><br>
-Always.<br>
-Forever.<br>
-Even from a distance.<br>
-Even when it hurts.<br><br>
-<strong>I loved you. I am sorry. And I hope you find the love you truly deserve.</strong>`,
-    footer: 'Love should never hurt, Dal.<br>Find peace. Find joy. Find love that lifts you up.<br><br>I will carry the weight of my mistakes.<br>You just carry on being the beautiful soul you are.<br><br>Love you, Dal. Always. 💔'
-  }
-];
+    memoryImages: [
+      'Images/Beautiful.jpeg',
+      'Images/Charming.jpg',
+      'Images/Chearful.jpg',
+      'Images/Perfect.jpg',
+      'Images/Queen 👑.jpg'
+    ]
+  };
 
 // ===================== EVENTS RENDERER =====================
 function renderEventButtons() {
@@ -970,6 +943,7 @@ function renderEventButtons() {
     const btn = document.createElement('button');
     btn.className = 'event-btn' + (evt.isNew ? ' new' : '');
     btn.innerHTML = evt.icon + ' ' + evt.label;
+    btn.setAttribute('data-event', evt.id);
     btn.onclick = () => openEventPopup(evt.id);
     sidebar.appendChild(btn);
   });
@@ -987,27 +961,43 @@ function openEventPopup(eventId) {
 
   const overlay = document.getElementById('eventOverlay');
   const content = document.getElementById('eventContent');
+  const popup = document.querySelector('.event-popup');
   if (!overlay || !content) return;
+
+  if (popup) popup.classList.remove('universe-active');
 
   content.innerHTML = buildEventHTML(evt);
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
 
-  startEventQuotes(evt);
+  if (evt.type === 'universe') {
+    if (popup) popup.classList.add('universe-active');
+    setTimeout(() => {
+      initUniverseCanvas();
+      startUniverseTypewriter();
+      showUniverseMemory();
+    }, 300);
+  } else {
+    startEventQuotes(evt);
 
-  setTimeout(() => {
-    const fill = document.getElementById('eventProgressFill');
-    if (fill) fill.classList.add('full');
-  }, 500);
+    setTimeout(() => {
+      const fill = document.getElementById('eventProgressFill');
+      if (fill) fill.classList.add('full');
+    }, 500);
 
-  setTimeout(() => {
-    typeEventLetter(evt.letter);
-  }, 800);
+    setTimeout(() => {
+      typeEventLetter(evt.letter);
+    }, 800);
+  }
 
   setTimeout(setupCursorHover, 100);
 }
 
 function buildEventHTML(evt) {
+  if (evt.type === 'universe') {
+    return buildUniverseEventHTML(evt);
+  }
+
   const quotesHTML = evt.quotes.map((q, i) => 
     `<div class="event-quote-text" id="eventQuoteText${i}" style="display:${i===0?'block':'none'}">${q.text}</div>
      <div class="event-quote-author" id="eventQuoteAuthor${i}" style="display:${i===0?'block':'none'}">— ${q.author}</div>`
@@ -1104,9 +1094,12 @@ function stopEventQuotes() {
 function closeEventPopup(e) {
   if (e && e.target !== document.getElementById('eventOverlay')) return;
   const overlay = document.getElementById('eventOverlay');
+  const popup = document.querySelector('.event-popup');
   if (overlay) overlay.classList.remove('active');
+  if (popup) popup.classList.remove('universe-active');
   document.body.style.overflow = '';
   stopEventQuotes();
+  destroyUniverseCanvas();
   const letterText = document.getElementById('eventLetterText');
   const letterSig = document.getElementById('eventLetterSig');
   const progressFill = document.getElementById('eventProgressFill');
@@ -1191,3 +1184,864 @@ loadSong(0);
 renderEventButtons();
 setupCursorHover();
 showToast('Welcome, Dal. Use arrow keys or scroll to navigate 💫');
+
+
+// ===================== UNIVERSE OF LOVE — MASTERPIECE SYSTEM =====================
+// A cosmic love engine. Black hole. Emoji spirals. Constellations. Infinite.
+
+let universeAnimId = null;
+let universeCtx = null;
+let universeCanvas = null;
+let universeParticles = [];
+let universeStarsNear = [];
+let universeStarsMid = [];
+let universeStarsFar = [];
+let universeShootingStars = [];
+let universeNebula = [];
+let universeGhostTexts = [];
+let universeDustRings = [];
+let universeCycle = 0;
+let universeCycleStart = 0;
+let universeTypewriterTimeout = null;
+let universeMouseX = -1;
+let universeMouseY = -1;
+let universeHeartPulse = 0;
+let universeWarpActive = false;
+let universeWarpTime = 0;
+
+const LOVE_EMOJIS = ['💖','💫','✨','💛','💕','🌟','💗','💘','💝','🌙','⭐','💓','🪐','🌠'];
+const CYCLE_PHASES = [
+  { name: 'spiral', duration: 4000 },
+  { name: 'pattern', duration: 3500 },
+  { name: 'hold', duration: 2500 },
+  { name: 'dissolve', duration: 2000 }
+];
+const GHOST_PHRASES = [
+  'Infinite love', 'Forever Dal', 'My universe', 'Stardust & you',
+  'Eternal', 'Beyond time', 'My everything', 'Cosmic bond',
+  'Love transcends', 'You are my light', 'Soul connection', 'Destiny'
+];
+
+function buildUniverseEventHTML(evt) {
+  return `
+    <canvas class="universe-canvas" id="universeCanvas"></canvas>
+    <div class="universe-overlay">
+      <div class="universe-center-heart" id="universeCenterHeart" title="Tap to send love">💖</div>
+      <div class="universe-heart-ring" id="universeHeartRing1"></div>
+      <div class="universe-heart-ring" id="universeHeartRing2" style="animation-delay:0.7s"></div>
+      <div class="universe-letter" id="universeLetter"></div>
+      <div class="universe-memory-container" id="universeMemory"></div>
+      <div class="universe-title">Universe of Love</div>
+      <div class="universe-subtitle">For Dal — Across All Space & Time</div>
+      <div class="universe-ghost-container" id="universeGhostContainer"></div>
+      <div class="universe-energy-bar">
+        <div class="universe-energy-fill" id="universeEnergyFill"></div>
+      </div>
+      <div class="universe-energy-label">Love Energy</div>
+    </div>
+  `;
+}
+
+function initUniverseCanvas() {
+  universeCanvas = document.getElementById('universeCanvas');
+  if (!universeCanvas) return;
+  universeCtx = universeCanvas.getContext('2d');
+
+  const popup = document.querySelector('.event-popup');
+  const rect = popup ? popup.getBoundingClientRect() : { width: 800, height: 600 };
+  universeCanvas.width = rect.width * window.devicePixelRatio;
+  universeCanvas.height = rect.height * window.devicePixelRatio;
+  universeCanvas.style.width = rect.width + 'px';
+  universeCanvas.style.height = rect.height + 'px';
+  universeCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+  const w = rect.width;
+  const h = rect.height;
+  const cx = w / 2;
+  const cy = h / 2;
+
+  // 3 layers of parallax stars
+  universeStarsFar = createStarLayer(80, w, h, 0.3, 0.5);
+  universeStarsMid = createStarLayer(60, w, h, 0.6, 1.2);
+  universeStarsNear = createStarLayer(40, w, h, 1.0, 2.5);
+
+  // Nebula clouds
+  universeNebula = [];
+  for (let i = 0; i < 6; i++) {
+    universeNebula.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      radius: 120 + Math.random() * 250,
+      hue: 260 + Math.random() * 80,
+      opacity: 0.02 + Math.random() * 0.04,
+      driftX: (Math.random() - 0.5) * 0.2,
+      driftY: (Math.random() - 0.5) * 0.2
+    });
+  }
+
+  // Dust rings around black hole
+  universeDustRings = [];
+  for (let i = 0; i < 3; i++) {
+    universeDustRings.push({
+      radius: 80 + i * 40,
+      tilt: (Math.random() - 0.5) * 0.3,
+      speed: 0.0003 + i * 0.0002,
+      particles: 40 + i * 20,
+      hue: 280 + i * 20
+    });
+  }
+
+  // Love particles
+  universeParticles = [];
+  for (let i = 0; i < 80; i++) {
+    universeParticles.push(new LoveParticle(cx, cy));
+  }
+
+  // Ghost texts
+  universeGhostTexts = [];
+  for (let i = 0; i < 8; i++) {
+    universeGhostTexts.push({
+      text: GHOST_PHRASES[i % GHOST_PHRASES.length],
+      x: Math.random() * w,
+      y: Math.random() * h,
+      opacity: 0,
+      targetOpacity: 0.08 + Math.random() * 0.12,
+      phase: Math.random() * Math.PI * 2,
+      speed: 0.0003 + Math.random() * 0.0005,
+      size: 14 + Math.random() * 8
+    });
+  }
+
+  universeShootingStars = [];
+  universeCycleStart = performance.now();
+  universeCycle = 0;
+  universeWarpActive = false;
+  universeWarpTime = 0;
+
+  // Mouse/touch tracking
+  universeCanvas.addEventListener('mousemove', onUniverseMouseMove);
+  universeCanvas.addEventListener('touchmove', onUniverseTouchMove, { passive: true });
+  universeCanvas.addEventListener('click', onUniverseClick);
+
+  const heart = document.getElementById('universeCenterHeart');
+  if (heart) {
+    heart.addEventListener('click', onUniverseHeartClick);
+  }
+
+  window.addEventListener('resize', onUniverseResize);
+
+  // Start energy bar animation
+  setTimeout(() => {
+    const fill = document.getElementById('universeEnergyFill');
+    if (fill) fill.classList.add('full');
+  }, 800);
+
+  animateUniverse();
+}
+
+function createStarLayer(count, w, h, minSize, maxSize) {
+  const stars = [];
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: minSize + Math.random() * (maxSize - minSize),
+      opacity: 0.2 + Math.random() * 0.8,
+      twinkleSpeed: 0.005 + Math.random() * 0.02,
+      twinklePhase: Math.random() * Math.PI * 2,
+      parallax: minSize / maxSize
+    });
+  }
+  return stars;
+}
+
+function destroyUniverseCanvas() {
+  if (universeAnimId) {
+    cancelAnimationFrame(universeAnimId);
+    universeAnimId = null;
+  }
+  if (universeTypewriterTimeout) {
+    clearTimeout(universeTypewriterTimeout);
+    universeTypewriterTimeout = null;
+  }
+  if (universeCanvas) {
+    universeCanvas.removeEventListener('mousemove', onUniverseMouseMove);
+    universeCanvas.removeEventListener('touchmove', onUniverseTouchMove);
+    universeCanvas.removeEventListener('click', onUniverseClick);
+  }
+  const heart = document.getElementById('universeCenterHeart');
+  if (heart) {
+    heart.removeEventListener('click', onUniverseHeartClick);
+  }
+  window.removeEventListener('resize', onUniverseResize);
+  universeParticles = [];
+  universeStarsNear = [];
+  universeStarsMid = [];
+  universeStarsFar = [];
+  universeShootingStars = [];
+  universeNebula = [];
+  universeGhostTexts = [];
+  universeDustRings = [];
+  universeCtx = null;
+  universeCanvas = null;
+  universeMouseX = -1;
+  universeMouseY = -1;
+}
+
+function onUniverseMouseMove(e) {
+  const rect = universeCanvas.getBoundingClientRect();
+  universeMouseX = (e.clientX - rect.left);
+  universeMouseY = (e.clientY - rect.top);
+}
+
+function onUniverseTouchMove(e) {
+  if (e.touches.length > 0) {
+    const rect = universeCanvas.getBoundingClientRect();
+    universeMouseX = (e.touches[0].clientX - rect.left);
+    universeMouseY = (e.touches[0].clientY - rect.top);
+  }
+}
+
+function onUniverseClick(e) {
+  const rect = universeCanvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left);
+  const y = (e.clientY - rect.top);
+  createRipple(x, y);
+}
+
+function createRipple(x, y) {
+  const cx = universeCanvas ? universeCanvas.width / (2 * window.devicePixelRatio) : 400;
+  const cy = universeCanvas ? universeCanvas.height / (2 * window.devicePixelRatio) : 300;
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const p = new LoveParticle(cx, cy);
+    p.x = x;
+    p.y = y;
+    p.vx = Math.cos(angle) * (2 + Math.random() * 3);
+    p.vy = Math.sin(angle) * (2 + Math.random() * 3);
+    p.speed = 2 + Math.random() * 3;
+    p.targetOpacity = 1;
+    p.phase = 'burst';
+    p.burstLife = 1;
+    universeParticles.push(p);
+  }
+  if (universeParticles.length > 150) {
+    universeParticles = universeParticles.slice(-150);
+  }
+}
+
+function onUniverseResize() {
+  if (!universeCanvas) return;
+  const popup = document.querySelector('.event-popup');
+  if (!popup) return;
+  const rect = popup.getBoundingClientRect();
+  universeCanvas.width = rect.width * window.devicePixelRatio;
+  universeCanvas.height = rect.height * window.devicePixelRatio;
+  universeCanvas.style.width = rect.width + 'px';
+  universeCanvas.style.height = rect.height + 'px';
+  if (universeCtx) {
+    universeCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  }
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+  universeParticles.forEach(p => { p.cx = cx; p.cy = cy; });
+}
+
+function onUniverseHeartClick(e) {
+  e.stopPropagation();
+  const cx = universeCanvas ? universeCanvas.width / (2 * window.devicePixelRatio) : 400;
+  const cy = universeCanvas ? universeCanvas.height / (2 * window.devicePixelRatio) : 300;
+  for (let i = 0; i < 30; i++) {
+    const p = new LoveParticle(cx, cy);
+    p.speed = 3 + Math.random() * 5;
+    p.targetOpacity = 1;
+    p.x = cx;
+    p.y = cy;
+    p.cx = cx;
+    p.cy = cy;
+    p.emoji = LOVE_EMOJIS[Math.floor(Math.random() * LOVE_EMOJIS.length)];
+    p.size = 20 + Math.random() * 16;
+    p.baseSize = p.size;
+    universeParticles.push(p);
+  }
+  if (universeParticles.length > 150) {
+    universeParticles = universeParticles.slice(-150);
+  }
+  // Trigger warp effect
+  universeWarpActive = true;
+  universeWarpTime = 0;
+}
+
+class LoveParticle {
+  constructor(cx, cy) {
+    this.cx = cx;
+    this.cy = cy;
+    this.reset();
+  }
+
+  reset() {
+    this.x = this.cx;
+    this.y = this.cy;
+    this.angle = Math.random() * Math.PI * 2;
+    this.distance = 0;
+    this.spiralTightness = 0.12 + Math.random() * 0.08;
+    this.speed = 0.8 + Math.random() * 2.5;
+    this.emoji = LOVE_EMOJIS[Math.floor(Math.random() * LOVE_EMOJIS.length)];
+    this.baseSize = 14 + Math.random() * 16;
+    this.size = this.baseSize;
+    this.opacity = 0;
+    this.targetOpacity = 0.6 + Math.random() * 0.4;
+    this.phase = 'spiral';
+    this.vx = 0;
+    this.vy = 0;
+    this.rotation = Math.random() * Math.PI * 2;
+    this.rotSpeed = (Math.random() - 0.5) * 0.04;
+    this.trail = [];
+    this.patternIndex = Math.floor(Math.random() * 3);
+    this.patternT = Math.random();
+    this.driftX = 0;
+    this.driftY = 0;
+    this.burstLife = 0;
+    this.gravityStrength = 0.02 + Math.random() * 0.03;
+  }
+
+  update(phase, phaseProgress, mouseX, mouseY) {
+    this.rotation += this.rotSpeed;
+
+    // Mouse gravity attraction
+    if (mouseX > 0 && mouseY > 0) {
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 200 && dist > 5) {
+        const force = (1 - dist / 200) * this.gravityStrength;
+        this.vx += (dx / dist) * force;
+        this.vy += (dy / dist) * force;
+      }
+    }
+
+    if (this.phase === 'burst') {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vx *= 0.98;
+      this.vy *= 0.98;
+      this.burstLife -= 0.015;
+      this.opacity = this.targetOpacity * this.burstLife;
+      this.size = this.baseSize * (1 + (1 - this.burstLife));
+      if (this.burstLife <= 0) this.reset();
+      return;
+    }
+
+    if (phase === 'spiral') {
+      this.distance += this.speed * (1 + phaseProgress * 2);
+      this.angle += this.spiralTightness;
+      const targetX = this.cx + Math.cos(this.angle) * this.distance;
+      const targetY = this.cy + Math.sin(this.angle) * this.distance;
+      this.x += (targetX - this.x) * 0.1 + this.vx;
+      this.y += (targetY - this.y) * 0.1 + this.vy;
+      this.opacity = Math.min(this.targetOpacity, phaseProgress * 3);
+      this.size = this.baseSize * (0.5 + phaseProgress * 0.5);
+      this.vx *= 0.95;
+      this.vy *= 0.95;
+      // Add trail during spiral
+      this.trail.push({ x: this.x, y: this.y, opacity: this.opacity * 0.4, size: this.size * 0.3 });
+      if (this.trail.length > 10) this.trail.shift();
+    } else if (phase === 'pattern') {
+      const patternPos = this.getPatternPosition();
+      const ease = 0.04;
+      this.x += (patternPos.x - this.x) * ease + this.vx;
+      this.y += (patternPos.y - this.y) * ease + this.vy;
+      this.opacity = this.targetOpacity;
+      this.size = this.baseSize;
+      this.vx *= 0.92;
+      this.vy *= 0.92;
+      this.trail = [];
+    } else if (phase === 'hold') {
+      this.patternT += 0.0008;
+      const patternPos = this.getPatternPosition();
+      this.x = patternPos.x + Math.sin(this.patternT * Math.PI * 2 + this.angle) * 4 + this.vx;
+      this.y = patternPos.y + Math.cos(this.patternT * Math.PI * 2 + this.angle) * 4 + this.vy;
+      this.opacity = this.targetOpacity * (0.8 + Math.sin(performance.now() * 0.001 + this.angle) * 0.2);
+      this.size = this.baseSize * (1 + Math.sin(performance.now() * 0.002) * 0.1);
+      this.vx *= 0.95;
+      this.vy *= 0.95;
+      this.trail = [];
+    } else if (phase === 'dissolve') {
+      this.driftX += (Math.random() - 0.5) * 3;
+      this.driftY += (Math.random() - 0.5) * 3;
+      this.x += this.driftX + this.vx;
+      this.y += this.driftY + this.vy;
+      this.opacity = this.targetOpacity * (1 - phaseProgress);
+      this.size = this.baseSize * (1 + phaseProgress * 0.5);
+      this.rotation += this.rotSpeed * 4;
+      this.vx *= 0.9;
+      this.vy *= 0.9;
+      this.trail = [];
+      if (phaseProgress > 0.95) this.reset();
+    }
+  }
+
+  getPatternPosition() {
+    const cx = this.cx;
+    const cy = this.cy;
+    const scale = Math.min(cx, cy) * 0.5;
+
+    if (this.patternIndex === 0) {
+      // Heart shape parametric
+      const t = this.patternT * Math.PI * 2;
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+      return { x: cx + x * scale / 16, y: cy + y * scale / 16 };
+    } else if (this.patternIndex === 1) {
+      // Infinity symbol (lemniscate)
+      const t = this.patternT * Math.PI * 2;
+      const denom = 1 + Math.sin(t) * Math.sin(t);
+      const x = Math.sin(t) / denom;
+      const y = Math.sin(t) * Math.cos(t) / denom;
+      return { x: cx + x * scale * 0.9, y: cy + y * scale * 0.9 };
+    } else {
+      // Constellation (star pattern)
+      const idx = Math.floor(this.patternT * 12);
+      const angle = (idx / 12) * Math.PI * 2 + this.patternT * 0.3;
+      const dist = (0.25 + (this.patternT % 1) * 0.75) * scale;
+      return { x: cx + Math.cos(angle) * dist, y: cy + Math.sin(angle) * dist };
+    }
+  }
+
+  draw(ctx) {
+    // Draw trail
+    for (let i = 0; i < this.trail.length; i++) {
+      const t = this.trail[i];
+      const trailOpacity = (i / this.trail.length) * t.opacity;
+      ctx.globalAlpha = trailOpacity;
+      const gradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.size * 2);
+      gradient.addColorStop(0, 'rgba(232, 160, 191, 0.8)');
+      gradient.addColorStop(1, 'rgba(167, 139, 250, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, t.size * 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Draw particle with glow
+    ctx.globalAlpha = this.opacity;
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation);
+    ctx.font = `${this.size}px serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(232, 160, 191, 0.8)';
+    ctx.shadowBlur = 20;
+    ctx.fillText(this.emoji, 0, 0);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+  }
+}
+
+function drawStars(ctx, stars, w, h, time) {
+  stars.forEach(star => {
+    star.twinklePhase += star.twinkleSpeed;
+    const twinkle = 0.3 + Math.sin(star.twinklePhase) * 0.7;
+    ctx.globalAlpha = star.opacity * twinkle;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+    ctx.fill();
+    // Star glow
+    if (star.size > 1.5) {
+      ctx.globalAlpha = star.opacity * twinkle * 0.3;
+      const g = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 4);
+      g.addColorStop(0, 'rgba(255,255,255,0.5)');
+      g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawNebula(ctx, nebula, w, h, time) {
+  nebula.forEach(cloud => {
+    cloud.x += cloud.driftX;
+    cloud.y += cloud.driftY;
+    if (cloud.x < -cloud.radius) cloud.x = w + cloud.radius;
+    if (cloud.x > w + cloud.radius) cloud.x = -cloud.radius;
+    if (cloud.y < -cloud.radius) cloud.y = h + cloud.radius;
+    if (cloud.y > h + cloud.radius) cloud.y = -cloud.radius;
+
+    const ng = ctx.createRadialGradient(cloud.x, cloud.y, 0, cloud.x, cloud.y, cloud.radius);
+    ng.addColorStop(0, `hsla(${cloud.hue + Math.sin(time * 0.0001) * 30}, 70%, 60%, ${cloud.opacity})`);
+    ng.addColorStop(0.5, `hsla(${cloud.hue + Math.sin(time * 0.0001) * 30}, 70%, 50%, ${cloud.opacity * 0.5})`);
+    ng.addColorStop(1, `hsla(${cloud.hue + Math.sin(time * 0.0001) * 30}, 70%, 40%, 0)`);
+    ctx.fillStyle = ng;
+    ctx.fillRect(cloud.x - cloud.radius, cloud.y - cloud.radius, cloud.radius * 2, cloud.radius * 2);
+  });
+}
+
+function drawBlackHole(ctx, cx, cy, time) {
+  const bhRadius = 35 + Math.sin(time * 0.0015) * 6;
+
+  // Gravitational lensing glow
+  const lensGlow = ctx.createRadialGradient(cx, cy, bhRadius * 0.8, cx, cy, bhRadius * 4);
+  lensGlow.addColorStop(0, 'rgba(0,0,0,0.95)');
+  lensGlow.addColorStop(0.2, 'rgba(20,10,40,0.7)');
+  lensGlow.addColorStop(0.4, 'rgba(60,30,90,0.4)');
+  lensGlow.addColorStop(0.7, 'rgba(100,50,120,0.15)');
+  lensGlow.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = lensGlow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, bhRadius * 4, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Photon ring (bright ring around event horizon)
+  const ringGradient = ctx.createRadialGradient(cx, cy, bhRadius * 0.9, cx, cy, bhRadius * 1.3);
+  ringGradient.addColorStop(0, 'rgba(232, 160, 191, 0)');
+  ringGradient.addColorStop(0.5, 'rgba(232, 160, 191, 0.6)');
+  ringGradient.addColorStop(0.7, 'rgba(167, 139, 250, 0.4)');
+  ringGradient.addColorStop(1, 'rgba(232, 160, 191, 0)');
+  ctx.fillStyle = ringGradient;
+  ctx.beginPath();
+  ctx.arc(cx, cy, bhRadius * 1.3, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Event horizon (dark center)
+  ctx.fillStyle = 'rgba(0,0,0,0.98)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, bhRadius, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Accretion disk (rotating, glowing)
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(time * 0.0003);
+  const diskGradient = ctx.createRadialGradient(0, 0, bhRadius * 1.1, 0, 0, bhRadius * 2.8);
+  diskGradient.addColorStop(0, 'rgba(232, 160, 191, 0)');
+  diskGradient.addColorStop(0.3, 'rgba(232, 160, 191, 0.25)');
+  diskGradient.addColorStop(0.5, 'rgba(167, 139, 250, 0.35)');
+  diskGradient.addColorStop(0.7, 'rgba(232, 160, 191, 0.2)');
+  diskGradient.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = diskGradient;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, bhRadius * 2.8, bhRadius * 0.6, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Dust rings
+  universeDustRings.forEach((ring, idx) => {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(time * ring.speed + idx * 2);
+    ctx.scale(1, Math.cos(ring.tilt));
+    for (let i = 0; i < ring.particles; i++) {
+      const angle = (i / ring.particles) * Math.PI * 2;
+      const r = ring.radius + Math.sin(angle * 3 + time * 0.001) * 5;
+      const px = Math.cos(angle) * r;
+      const py = Math.sin(angle) * r;
+      ctx.globalAlpha = 0.3 + Math.sin(angle * 5 + time * 0.002) * 0.2;
+      ctx.fillStyle = `hsla(${ring.hue + Math.sin(time * 0.0005) * 20}, 70%, 70%, 0.8)`;
+      ctx.beginPath();
+      ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawGhostTexts(ctx, w, h, time) {
+  universeGhostTexts.forEach(ghost => {
+    ghost.phase += ghost.speed;
+    ghost.opacity = ghost.targetOpacity * (0.5 + Math.sin(ghost.phase) * 0.5);
+    ghost.y += Math.sin(ghost.phase * 2) * 0.3;
+
+    ctx.globalAlpha = ghost.opacity;
+    ctx.font = `${ghost.size}px 'Cormorant Garamond', serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(200, 180, 255, 0.6)';
+    ctx.shadowColor = 'rgba(167, 139, 250, 0.5)';
+    ctx.shadowBlur = 15;
+    ctx.fillText(ghost.text, ghost.x, ghost.y);
+    ctx.shadowBlur = 0;
+  });
+  ctx.globalAlpha = 1;
+}
+
+function drawConstellationLines(ctx, particles, phase, phaseProgress) {
+  if (phase !== 'pattern' && phase !== 'hold') return;
+
+  const patternParticles = particles.filter(p => p.patternIndex === 2 && p.opacity > 0.3);
+  if (patternParticles.length < 3) return;
+
+  const lineOpacity = phase === 'pattern'
+    ? phaseProgress * 0.2
+    : (0.2 - Math.abs(0.5 - phaseProgress) * 0.15);
+
+  ctx.globalAlpha = lineOpacity;
+  ctx.strokeStyle = 'rgba(167, 139, 250, 0.6)';
+  ctx.lineWidth = 1;
+  ctx.shadowColor = 'rgba(167, 139, 250, 0.4)';
+  ctx.shadowBlur = 8;
+
+  for (let i = 0; i < patternParticles.length; i++) {
+    for (let j = i + 1; j < patternParticles.length; j++) {
+      const p1 = patternParticles[i];
+      const p2 = patternParticles[j];
+      const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+      if (dist < 120) {
+        const alpha = (1 - dist / 120) * lineOpacity;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+}
+
+function drawPulseRings(ctx, cx, cy, time) {
+  const pulseProgress = ((time - universeCycleStart) % 2500) / 2500;
+  const pulseRadius = 60 + pulseProgress * 200;
+  ctx.globalAlpha = (1 - pulseProgress) * 0.25;
+  ctx.strokeStyle = 'rgba(232, 160, 191, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(cx, cy, pulseRadius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Second ring
+  const pulse2 = ((time - universeCycleStart + 1250) % 2500) / 2500;
+  const radius2 = 60 + pulse2 * 200;
+  ctx.globalAlpha = (1 - pulse2) * 0.15;
+  ctx.strokeStyle = 'rgba(167, 139, 250, 0.3)';
+  ctx.beginPath();
+  ctx.arc(cx, cy, radius2, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function drawWarpEffect(ctx, w, h, cx, cy, time) {
+  if (!universeWarpActive) return;
+  universeWarpTime += 0.016;
+  const progress = Math.min(universeWarpTime / 1.5, 1);
+
+  ctx.save();
+  ctx.globalAlpha = (1 - progress) * 0.3;
+  const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * progress);
+  gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+  gradient.addColorStop(0.5, 'rgba(232, 160, 191, 0.1)');
+  gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, w, h);
+
+  // Warp streaks
+  for (let i = 0; i < 20; i++) {
+    const angle = (i / 20) * Math.PI * 2 + time * 0.001;
+    const dist = 50 + progress * 300;
+    const x1 = cx + Math.cos(angle) * 50;
+    const y1 = cy + Math.sin(angle) * 50;
+    const x2 = cx + Math.cos(angle) * dist;
+    const y2 = cy + Math.sin(angle) * dist;
+    ctx.globalAlpha = (1 - progress) * 0.5;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 2 * (1 - progress);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  if (progress >= 1) {
+    universeWarpActive = false;
+    universeWarpTime = 0;
+  }
+}
+
+function animateUniverse() {
+  if (!universeCtx || !universeCanvas) return;
+  const ctx = universeCtx;
+  const w = universeCanvas.width / window.devicePixelRatio;
+  const h = universeCanvas.height / window.devicePixelRatio;
+  const cx = w / 2;
+  const cy = h / 2;
+  const now = performance.now();
+
+  const totalCycleTime = CYCLE_PHASES.reduce((a, p) => a + p.duration, 0);
+  const elapsed = (now - universeCycleStart) % totalCycleTime;
+  let accumulated = 0;
+  let currentPhase = CYCLE_PHASES[0].name;
+  let phaseProgress = 0;
+  for (const phase of CYCLE_PHASES) {
+    if (elapsed < accumulated + phase.duration) {
+      currentPhase = phase.name;
+      phaseProgress = (elapsed - accumulated) / phase.duration;
+      break;
+    }
+    accumulated += phase.duration;
+  }
+
+  // Check for cycle reset
+  if (elapsed < 50 && universeCycle > 0) {
+    universeParticles.forEach(p => {
+      p.patternIndex = (p.patternIndex + 1) % 3;
+      p.patternT = Math.random();
+      p.reset();
+    });
+    showUniverseMemory();
+  }
+  universeCycle = Math.floor((now - universeCycleStart) / totalCycleTime);
+
+  // Background
+  const bgGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h));
+  bgGradient.addColorStop(0, '#1a0f3a');
+  bgGradient.addColorStop(0.3, '#0f0c29');
+  bgGradient.addColorStop(0.7, '#0a0818');
+  bgGradient.addColorStop(1, '#050510');
+  ctx.fillStyle = bgGradient;
+  ctx.fillRect(0, 0, w, h);
+
+  // Nebula
+  drawNebula(ctx, universeNebula, w, h, now);
+
+  // Parallax stars (far -> mid -> near)
+  drawStars(ctx, universeStarsFar, w, h, now);
+  drawStars(ctx, universeStarsMid, w, h, now);
+  drawStars(ctx, universeStarsNear, w, h, now);
+
+  // Black hole
+  drawBlackHole(ctx, cx, cy, now);
+
+  // Pulse rings
+  drawPulseRings(ctx, cx, cy, now);
+
+  // Love particles
+  universeParticles.forEach(p => {
+    p.update(currentPhase, phaseProgress, universeMouseX, universeMouseY);
+    p.draw(ctx);
+  });
+
+  // Constellation connections
+  drawConstellationLines(ctx, universeParticles, currentPhase, phaseProgress);
+
+  // Shooting stars
+  if (Math.random() < 0.004) {
+    universeShootingStars.push({
+      x: Math.random() * w,
+      y: Math.random() * h * 0.4,
+      vx: -4 - Math.random() * 5,
+      vy: 1 + Math.random() * 3,
+      length: 60 + Math.random() * 120,
+      opacity: 1,
+      hue: 280 + Math.random() * 60
+    });
+  }
+  universeShootingStars = universeShootingStars.filter(s => {
+    s.x += s.vx;
+    s.y += s.vy;
+    s.opacity -= 0.015;
+    if (s.opacity <= 0) return false;
+    ctx.globalAlpha = s.opacity;
+    ctx.strokeStyle = `hsla(${s.hue}, 80%, 80%, 0.9)`;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = `hsla(${s.hue}, 80%, 70%, 0.6)`;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.moveTo(s.x, s.y);
+    ctx.lineTo(s.x - s.vx * s.length / 15, s.y - s.vy * s.length / 15);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    return true;
+  });
+  ctx.globalAlpha = 1;
+
+  // Ghost texts
+  drawGhostTexts(ctx, w, h, now);
+
+  // Warp effect
+  drawWarpEffect(ctx, w, h, cx, cy, now);
+
+  // Heartbeat sync for center heart
+  universeHeartPulse = Math.sin(now * 0.003) * 0.5 + 0.5;
+  const heart = document.getElementById('universeCenterHeart');
+  if (heart) {
+    const scale = 1 + universeHeartPulse * 0.15;
+    heart.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  }
+
+  universeAnimId = requestAnimationFrame(animateUniverse);
+}
+
+function startUniverseTypewriter() {
+  const evt = EVENTS.find(e => e.id === 'universe-of-love');
+  if (!evt || !evt.loveLetters) return;
+  const letterEl = document.getElementById('universeLetter');
+  if (!letterEl) return;
+
+  let letterIdx = 0;
+  let charIdx = 0;
+  let isDeleting = false;
+
+  function typeNext() {
+    if (!letterEl) return;
+    const letters = evt.loveLetters;
+    const currentText = letters[letterIdx];
+
+    if (!isDeleting) {
+      if (charIdx === 0) {
+        letterEl.style.opacity = '0';
+        setTimeout(() => { if (letterEl) letterEl.style.opacity = '1'; }, 150);
+      }
+      if (charIdx < currentText.length) {
+        letterEl.innerHTML = currentText.substring(0, charIdx + 1) + '<span class="universe-cursor">|</span>';
+        charIdx++;
+        universeTypewriterTimeout = setTimeout(typeNext, 35 + Math.random() * 25);
+      } else {
+        letterEl.innerHTML = currentText;
+        universeTypewriterTimeout = setTimeout(() => {
+          isDeleting = true;
+          typeNext();
+        }, 3500);
+      }
+    } else {
+      if (charIdx > 0) {
+        letterEl.innerHTML = currentText.substring(0, charIdx - 1) + '<span class="universe-cursor">|</span>';
+        charIdx--;
+        universeTypewriterTimeout = setTimeout(typeNext, 20);
+      } else {
+        isDeleting = false;
+        letterIdx = (letterIdx + 1) % letters.length;
+        typeNext();
+      }
+    }
+  }
+
+  typeNext();
+}
+
+function showUniverseMemory() {
+  const evt = EVENTS.find(e => e.id === 'universe-of-love');
+  if (!evt || !evt.memoryImages) return;
+  const container = document.getElementById('universeMemory');
+  if (!container) return;
+
+  container.innerHTML = '';
+  const imgSrc = evt.memoryImages[Math.floor(Math.random() * evt.memoryImages.length)];
+  const img = document.createElement('div');
+  img.className = 'universe-memory';
+  const rotation = (Math.random() - 0.5) * 25;
+  const left = 8 + Math.random() * 70;
+  const top = 8 + Math.random() * 60;
+  img.style.cssText = `background-image:url('${imgSrc}');left:${left}%;top:${top}%;--rotation:${rotation}deg;`;
+  container.appendChild(img);
+
+  setTimeout(() => img.classList.add('visible'), 100);
+  setTimeout(() => img.classList.remove('visible'), 5000);
+  setTimeout(() => { if (img.parentNode) img.parentNode.removeChild(img); }, 6500);
+}
