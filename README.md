@@ -127,7 +127,7 @@ Dal/
 ### Change the PIN
 In `main.js`, find:
 ```javascript
-const CORRECT_PIN = '2007';
+const CORRECT_PIN = '****';
 ```
 
 ### Add More Events
