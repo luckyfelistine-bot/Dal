@@ -28,7 +28,7 @@ A deeply personal, interactive love experience featuring a heaven gate PIN syste
 ## ✨ Features
 
 ### 🔐 Heaven Gate PIN System
-- Enter **`2007`** to unlock the gates to paradise
+- Enter **`****`** to unlock the gates to paradise
 - Animated starfield, light rays, and a lock that pulses with anticipation
 - Wrong PIN? The dots shake. Right PIN? The gates swing open in golden light.
 
