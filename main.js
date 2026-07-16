@@ -1004,7 +1004,7 @@ function openEventPopup(eventId) {
   if (evt.type === 'universe') {
     if (popup) popup.classList.add('universe-active');
     setTimeout(() => {
-      initUniverseCanvas();
+      initUniverseSky();
       startUniverseTypewriter();
       showUniverseMemory();
     }, 300);
@@ -1143,7 +1143,7 @@ function closeEventPopup(e) {
   if (popup) popup.classList.remove('universe-active');
   document.body.style.overflow = '';
   stopEventQuotes();
-  destroyUniverseCanvas();
+  destroyUniverseSky();
   const letterText = document.getElementById('eventLetterText');
   const letterSig = document.getElementById('eventLetterSig');
   const progressFill = document.getElementById('eventProgressFill');
@@ -1230,802 +1230,308 @@ setupCursorHover();
 showToast('Welcome, Dal. Use arrow keys or scroll to navigate 💫');
 
 
-// ===================== UNIVERSE OF LOVE — MASTERPIECE SYSTEM =====================
-// A cosmic love engine. Black hole. Emoji spirals. Constellations. Infinite.
+// ===================== UNIVERSE OF LOVE — CELESTIAL SKY =====================
+// Lightweight DOM-based cosmic experience. No canvas. Pure CSS magic + JS.
 
-let universeAnimId = null;
-let universeCtx = null;
-let universeCanvas = null;
-let universeParticles = [];
-let universeStarsNear = [];
-let universeStarsMid = [];
-let universeStarsFar = [];
-let universeShootingStars = [];
-let universeNebula = [];
-let universeGhostTexts = [];
-let universeDustRings = [];
-let universeCycle = 0;
-let universeCycleStart = 0;
+let universeSkyActive = false;
 let universeTypewriterTimeout = null;
-let universeMouseX = -1;
-let universeMouseY = -1;
-let universeHeartPulse = 0;
-let universeWarpActive = false;
-let universeWarpTime = 0;
+let universeMemoryInterval = null;
+let universeShootingInterval = null;
+let universeSpawnStarHandler = null;
+let universeHeartClickHandler = null;
 
-const LOVE_EMOJIS = ['💖','💫','✨','💛','💕','🌟','💗','💘','💝','🌙','⭐','💓','🪐','🌠'];
-const CYCLE_PHASES = [
-  { name: 'spiral', duration: 4000 },
-  { name: 'pattern', duration: 3500 },
-  { name: 'hold', duration: 2500 },
-  { name: 'dissolve', duration: 2000 }
-];
-const GHOST_PHRASES = [
+const LOVE_EMOJIS = ['💖','💫','✨','💛','💕','🌟','💗','💘','💝','🌙','⭐','💓','🪐','🌠','💜','🔮'];
+const SKY_PHRASES = [
   'Infinite love', 'Forever Dal', 'My universe', 'Stardust & you',
   'Eternal', 'Beyond time', 'My everything', 'Cosmic bond',
-  'Love transcends', 'You are my light', 'Soul connection', 'Destiny'
+  'Love transcends', 'You are my light', 'Soul connection', 'Destiny',
+  'Always you', 'My star', 'Eternal flame', 'Heart of gold'
 ];
 
 function buildUniverseEventHTML(evt) {
   return `
-    <canvas class="universe-canvas" id="universeCanvas"></canvas>
-    <div class="universe-overlay">
-      <div class="universe-center-heart" id="universeCenterHeart" title="Tap to send love">💖</div>
-      <div class="universe-heart-ring" id="universeHeartRing1"></div>
-      <div class="universe-heart-ring" id="universeHeartRing2" style="animation-delay:0.7s"></div>
+    <div class="universe-sky" id="universeSky">
+      <div class="universe-stars" id="universeStars"></div>
+      <div class="universe-nebula-sky" id="universeNebula"></div>
+      <div class="universe-shooting-stars" id="universeShootingStars"></div>
+
+      <div class="universe-sun" id="universeSun" title="Tap to send love">💖</div>
+      <div class="universe-sun-glow"></div>
+      <div class="universe-sun-ring"></div>
+      <div class="universe-sun-ring" style="animation-delay:0.8s"></div>
+
+      <div class="universe-orbits" id="universeOrbits"></div>
+
       <div class="universe-letter" id="universeLetter"></div>
-      <div class="universe-memory-container" id="universeMemory"></div>
+      <div class="universe-memory-sky" id="universeMemorySky"></div>
+
       <div class="universe-title">Universe of Love</div>
       <div class="universe-subtitle">For Dal — Across All Space & Time</div>
-      <div class="universe-ghost-container" id="universeGhostContainer"></div>
-      <div class="universe-energy-bar">
-        <div class="universe-energy-fill" id="universeEnergyFill"></div>
-      </div>
-      <div class="universe-energy-label">Love Energy</div>
+
+      <div class="universe-ghost-sky" id="universeGhostSky"></div>
+      <div class="universe-hint">Click anywhere to plant a star ✨</div>
     </div>
   `;
 }
 
-let universeActive = false;
-function initUniverseCanvas() {
-  universeActive = true;
-  universeCanvas = document.getElementById('universeCanvas');
-  if (!universeCanvas) return;
-  universeCtx = universeCanvas.getContext('2d');
+function initUniverseSky() {
+  universeSkyActive = true;
+  const sky = document.getElementById('universeSky');
+  if (!sky) return;
 
-  const popup = document.querySelector('.event-popup');
-  const rect = popup ? popup.getBoundingClientRect() : { width: 800, height: 600 };
-  universeCanvas.width = rect.width * window.devicePixelRatio;
-  universeCanvas.height = rect.height * window.devicePixelRatio;
-  universeCanvas.style.width = rect.width + 'px';
-  universeCanvas.style.height = rect.height + 'px';
-  universeCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  generateStars();
+  generateNebula();
+  generateOrbits();
+  generateGhosts();
 
-  const w = rect.width;
-  const h = rect.height;
-  const cx = w / 2;
-  const cy = h / 2;
+  // Shooting stars every 3-7 seconds
+  universeShootingInterval = setInterval(spawnShootingStar, 4000 + Math.random() * 4000);
 
-  // 3 layers of parallax stars
-  universeStarsFar = createStarLayer(80, w, h, 0.3, 0.5);
-  universeStarsMid = createStarLayer(60, w, h, 0.6, 1.2);
-  universeStarsNear = createStarLayer(40, w, h, 1.0, 2.5);
+  // Memory photos every 6 seconds
+  universeMemoryInterval = setInterval(showUniverseMemory, 6000);
 
-  // Nebula clouds
-  universeNebula = [];
-  for (let i = 0; i < 6; i++) {
-    universeNebula.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      radius: 120 + Math.random() * 250,
-      hue: 260 + Math.random() * 80,
-      opacity: 0.02 + Math.random() * 0.04,
-      driftX: (Math.random() - 0.5) * 0.2,
-      driftY: (Math.random() - 0.5) * 0.2
-    });
+  // Click to spawn star
+  universeSpawnStarHandler = function(e) {
+    if (!universeSkyActive) return;
+    const rect = sky.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    spawnStarAt(x, y);
+  };
+  sky.addEventListener('click', universeSpawnStarHandler);
+
+  // Heart burst
+  const sun = document.getElementById('universeSun');
+  if (sun) {
+    universeHeartClickHandler = function(e) {
+      e.stopPropagation();
+      spawnLoveBurst();
+      spawnHeartRipple();
+    };
+    sun.addEventListener('click', universeHeartClickHandler);
   }
 
-  // Dust rings around black hole
-  universeDustRings = [];
-  for (let i = 0; i < 3; i++) {
-    universeDustRings.push({
-      radius: 80 + i * 40,
-      tilt: (Math.random() - 0.5) * 0.3,
-      speed: 0.0003 + i * 0.0002,
-      particles: 40 + i * 20,
-      hue: 280 + i * 20
-    });
-  }
+  // Start typewriter
+  setTimeout(startUniverseTypewriter, 500);
+  // First memory immediately
+  setTimeout(showUniverseMemory, 800);
+}
 
-  // Love particles
-  universeParticles = [];
+function destroyUniverseSky() {
+  universeSkyActive = false;
+  if (universeTypewriterTimeout) { clearTimeout(universeTypewriterTimeout); universeTypewriterTimeout = null; }
+  if (universeMemoryInterval) { clearInterval(universeMemoryInterval); universeMemoryInterval = null; }
+  if (universeShootingInterval) { clearInterval(universeShootingInterval); universeShootingInterval = null; }
+
+  const sky = document.getElementById('universeSky');
+  if (sky && universeSpawnStarHandler) {
+    sky.removeEventListener('click', universeSpawnStarHandler);
+  }
+  const sun = document.getElementById('universeSun');
+  if (sun && universeHeartClickHandler) {
+    sun.removeEventListener('click', universeHeartClickHandler);
+  }
+  universeSpawnStarHandler = null;
+  universeHeartClickHandler = null;
+}
+
+function generateStars() {
+  const container = document.getElementById('universeStars');
+  if (!container) return;
+  container.innerHTML = '';
+
   for (let i = 0; i < 80; i++) {
-    universeParticles.push(new LoveParticle(cx, cy));
+    const star = document.createElement('div');
+    star.className = 'sky-star';
+    const size = 1 + Math.random() * 2.5;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const delay = Math.random() * 5;
+    const duration = 2 + Math.random() * 4;
+    const opacity = 0.3 + Math.random() * 0.7;
+
+    star.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${x}%; top:${y}%;
+      animation-delay:${delay}s;
+      animation-duration:${duration}s;
+      opacity:${opacity};
+    `;
+    container.appendChild(star);
   }
+}
 
-  // Ghost texts
-  universeGhostTexts = [];
-  for (let i = 0; i < 8; i++) {
-    universeGhostTexts.push({
-      text: GHOST_PHRASES[i % GHOST_PHRASES.length],
-      x: Math.random() * w,
-      y: Math.random() * h,
-      opacity: 0,
-      targetOpacity: 0.08 + Math.random() * 0.12,
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.0003 + Math.random() * 0.0005,
-      size: 14 + Math.random() * 8
-    });
+function spawnStarAt(x, y) {
+  const container = document.getElementById('universeStars');
+  if (!container || !universeSkyActive) return;
+
+  const star = document.createElement('div');
+  star.className = 'sky-star spawned';
+  const size = 2 + Math.random() * 3;
+  star.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${x}px; top:${y}px;
+    opacity:1;
+    background:#fff;
+    box-shadow:0 0 10px rgba(255,255,255,0.8),0 0 20px rgba(232,160,191,0.4);
+  `;
+  container.appendChild(star);
+
+  // Fade out and remove
+  setTimeout(() => { star.style.opacity = '0'; }, 2000);
+  setTimeout(() => { if (star.parentNode) star.remove(); }, 3500);
+}
+
+function generateNebula() {
+  const container = document.getElementById('universeNebula');
+  if (!container) return;
+  container.innerHTML = '';
+
+  for (let i = 0; i < 4; i++) {
+    const cloud = document.createElement('div');
+    cloud.className = 'sky-nebula';
+    const x = 10 + Math.random() * 80;
+    const y = 10 + Math.random() * 80;
+    const size = 150 + Math.random() * 250;
+    const hue = 260 + Math.random() * 60;
+    const delay = Math.random() * 10;
+
+    cloud.style.cssText = `
+      left:${x}%; top:${y}%;
+      width:${size}px; height:${size}px;
+      background:radial-gradient(circle, hsla(${hue},70%,60%,0.08) 0%, transparent 70%);
+      animation-delay:${delay}s;
+    `;
+    container.appendChild(cloud);
   }
+}
 
-  universeShootingStars = [];
-  universeCycleStart = performance.now();
-  universeCycle = 0;
-  universeWarpActive = false;
-  universeWarpTime = 0;
+function generateOrbits() {
+  const container = document.getElementById('universeOrbits');
+  if (!container) return;
+  container.innerHTML = '';
 
-  // Mouse/touch tracking
-  universeCanvas.addEventListener('mousemove', onUniverseMouseMove);
-  universeCanvas.addEventListener('touchmove', onUniverseTouchMove, { passive: true });
-  universeCanvas.addEventListener('click', onUniverseClick);
+  const evt = EVENTS.find(e => e.id === 'universe-of-love');
+  const images = evt ? evt.memoryImages : [];
 
-  const heart = document.getElementById('universeCenterHeart');
-  if (heart) {
-    heart.addEventListener('click', onUniverseHeartClick);
-  }
+  // 5 orbiting bodies: 3 photos + 2 emojis
+  const bodies = [
+    { type: 'photo', src: images[0] || '', orbit: 1, duration: 25, size: 50, startAngle: 0 },
+    { type: 'emoji', content: '💫', orbit: 2, duration: 35, size: 32, startAngle: 72 },
+    { type: 'photo', src: images[1] || '', orbit: 3, duration: 45, size: 40, startAngle: 144 },
+    { type: 'emoji', content: '✨', orbit: 2, duration: 30, size: 28, startAngle: 216 },
+    { type: 'photo', src: images[2] || '', orbit: 1, duration: 20, size: 45, startAngle: 288 },
+  ];
 
-  window.addEventListener('resize', onUniverseResize);
+  bodies.forEach((body, i) => {
+    const el = document.createElement('div');
+    el.className = 'sky-orbit-body';
+    const radius = 80 + body.orbit * 55;
 
-  // Start energy bar animation
-  setTimeout(() => {
-    const fill = document.getElementById('universeEnergyFill');
-    if (fill) {
-      fill.classList.add('full');
-      setTimeout(() => { if (fill) fill.classList.add('pulsing'); }, 3000);
+    if (body.type === 'photo' && body.src) {
+      el.innerHTML = `<div class="sky-orbit-photo" style="background-image:url('${body.src}')"></div>`;
+    } else {
+      el.innerHTML = `<div class="sky-orbit-emoji">${body.content}</div>`;
     }
-  }, 800);
 
-  animateUniverse();
+    el.style.cssText = `
+      --orbit-radius:${radius}px;
+      --orbit-duration:${body.duration}s;
+      --orbit-delay:${-body.duration * (body.startAngle / 360)}s;
+      width:${body.size}px; height:${body.size}px;
+      z-index:${10 + i};
+    `;
+    container.appendChild(el);
+  });
 }
 
-function createStarLayer(count, w, h, minSize, maxSize) {
-  const stars = [];
-  for (let i = 0; i < count; i++) {
-    stars.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      size: minSize + Math.random() * (maxSize - minSize),
-      opacity: 0.2 + Math.random() * 0.8,
-      twinkleSpeed: 0.005 + Math.random() * 0.02,
-      twinklePhase: Math.random() * Math.PI * 2,
-      parallax: minSize / maxSize
-    });
-  }
-  return stars;
+function spawnShootingStar() {
+  if (!universeSkyActive) return;
+  const container = document.getElementById('universeShootingStars');
+  if (!container) return;
+
+  const star = document.createElement('div');
+  star.className = 'sky-shooting-star';
+  const y = 5 + Math.random() * 40;
+  const duration = 1 + Math.random() * 1.5;
+  const delay = Math.random() * 0.5;
+
+  star.style.cssText = `
+    top:${y}%;
+    animation-duration:${duration}s;
+    animation-delay:${delay}s;
+  `;
+  container.appendChild(star);
+
+  setTimeout(() => { if (star.parentNode) star.remove(); }, (duration + delay + 0.5) * 1000);
 }
 
-function destroyUniverseCanvas() {
-  universeActive = false;
-  if (universeAnimId) {
-    cancelAnimationFrame(universeAnimId);
-    universeAnimId = null;
-  }
-  if (universeTypewriterTimeout) {
-    clearTimeout(universeTypewriterTimeout);
-    universeTypewriterTimeout = null;
-  }
-  if (universeCanvas) {
-    universeCanvas.removeEventListener('mousemove', onUniverseMouseMove);
-    universeCanvas.removeEventListener('touchmove', onUniverseTouchMove);
-    universeCanvas.removeEventListener('click', onUniverseClick);
-  }
-  const heart = document.getElementById('universeCenterHeart');
-  if (heart) {
-    heart.removeEventListener('click', onUniverseHeartClick);
-  }
-  window.removeEventListener('resize', onUniverseResize);
-  universeParticles = [];
-  universeStarsNear = [];
-  universeStarsMid = [];
-  universeStarsFar = [];
-  universeShootingStars = [];
-  universeNebula = [];
-  universeGhostTexts = [];
-  universeDustRings = [];
-  universeCtx = null;
-  universeCanvas = null;
-  universeMouseX = -1;
-  universeMouseY = -1;
-}
+function spawnLoveBurst() {
+  if (!universeSkyActive) return;
+  const sky = document.getElementById('universeSky');
+  if (!sky) return;
 
-function onUniverseMouseMove(e) {
-  const rect = universeCanvas.getBoundingClientRect();
-  universeMouseX = (e.clientX - rect.left);
-  universeMouseY = (e.clientY - rect.top);
-}
-
-function onUniverseTouchMove(e) {
-  if (e.touches.length > 0) {
-    const rect = universeCanvas.getBoundingClientRect();
-    universeMouseX = (e.touches[0].clientX - rect.left);
-    universeMouseY = (e.touches[0].clientY - rect.top);
-  }
-}
-
-function onUniverseClick(e) {
-  const rect = universeCanvas.getBoundingClientRect();
-  const x = (e.clientX - rect.left);
-  const y = (e.clientY - rect.top);
-  createRipple(x, y);
-}
-
-function createRipple(x, y) {
-  const cx = universeCanvas ? universeCanvas.width / (2 * window.devicePixelRatio) : 400;
-  const cy = universeCanvas ? universeCanvas.height / (2 * window.devicePixelRatio) : 300;
-  for (let i = 0; i < 12; i++) {
-    const angle = (i / 12) * Math.PI * 2;
-    const p = new LoveParticle(cx, cy);
-    p.x = x;
-    p.y = y;
-    p.vx = Math.cos(angle) * (2 + Math.random() * 3);
-    p.vy = Math.sin(angle) * (2 + Math.random() * 3);
-    p.speed = 2 + Math.random() * 3;
-    p.targetOpacity = 1;
-    p.phase = 'burst';
-    p.burstLife = 1;
-    universeParticles.push(p);
-  }
-  if (universeParticles.length > 150) {
-    universeParticles = universeParticles.slice(-150);
-  }
-}
-
-function onUniverseResize() {
-  if (!universeActive || !universeCanvas) return;
-  const popup = document.querySelector('.event-popup');
-  if (!popup) return;
-  const rect = popup.getBoundingClientRect();
-  universeCanvas.width = rect.width * window.devicePixelRatio;
-  universeCanvas.height = rect.height * window.devicePixelRatio;
-  universeCanvas.style.width = rect.width + 'px';
-  universeCanvas.style.height = rect.height + 'px';
-  if (universeCtx) {
-    universeCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
-  }
+  const rect = sky.getBoundingClientRect();
   const cx = rect.width / 2;
   const cy = rect.height / 2;
-  universeParticles.forEach(p => { p.cx = cx; p.cy = cy; });
-}
 
-function onUniverseHeartClick(e) {
-  e.stopPropagation();
-  const cx = universeCanvas ? universeCanvas.width / (2 * window.devicePixelRatio) : 400;
-  const cy = universeCanvas ? universeCanvas.height / (2 * window.devicePixelRatio) : 300;
-  for (let i = 0; i < 30; i++) {
-    const p = new LoveParticle(cx, cy);
-    p.speed = 3 + Math.random() * 5;
-    p.targetOpacity = 1;
-    p.x = cx;
-    p.y = cy;
-    p.cx = cx;
-    p.cy = cy;
-    p.emoji = LOVE_EMOJIS[Math.floor(Math.random() * LOVE_EMOJIS.length)];
-    p.size = 20 + Math.random() * 16;
-    p.baseSize = p.size;
-    universeParticles.push(p);
-  }
-  if (universeParticles.length > 150) {
-    universeParticles = universeParticles.slice(-150);
-  }
-  // Trigger warp effect
-  universeWarpActive = true;
-  universeWarpTime = 0;
-}
+  for (let i = 0; i < 16; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'sky-love-burst';
+    const angle = (i / 16) * Math.PI * 2;
+    const dist = 60 + Math.random() * 120;
+    const emoji = LOVE_EMOJIS[Math.floor(Math.random() * LOVE_EMOJIS.length)];
+    const duration = 1.5 + Math.random() * 1;
 
-class LoveParticle {
-  constructor(cx, cy) {
-    this.cx = cx;
-    this.cy = cy;
-    this.reset();
-  }
+    particle.textContent = emoji;
+    particle.style.cssText = `
+      left:${cx}px; top:${cy}px;
+      --burst-tx:${Math.cos(angle) * dist}px;
+      --burst-ty:${Math.sin(angle) * dist}px;
+      --burst-rot:${Math.random() * 360}deg;
+      animation-duration:${duration}s;
+      font-size:${16 + Math.random() * 12}px;
+    `;
+    sky.appendChild(particle);
 
-  reset() {
-    this.x = this.cx;
-    this.y = this.cy;
-    this.angle = Math.random() * Math.PI * 2;
-    this.distance = 0;
-    this.spiralTightness = 0.12 + Math.random() * 0.08;
-    this.speed = 0.8 + Math.random() * 2.5;
-    this.emoji = LOVE_EMOJIS[Math.floor(Math.random() * LOVE_EMOJIS.length)];
-    this.baseSize = 14 + Math.random() * 16;
-    this.size = this.baseSize;
-    this.opacity = 0;
-    this.targetOpacity = 0.6 + Math.random() * 0.4;
-    this.phase = 'spiral';
-    this.vx = 0;
-    this.vy = 0;
-    this.rotation = Math.random() * Math.PI * 2;
-    this.rotSpeed = (Math.random() - 0.5) * 0.04;
-    this.trail = [];
-    this.patternIndex = Math.floor(Math.random() * 3);
-    this.patternT = Math.random();
-    this.driftX = 0;
-    this.driftY = 0;
-    this.burstLife = 0;
-    this.gravityStrength = 0.02 + Math.random() * 0.03;
-  }
-
-  update(phase, phaseProgress, mouseX, mouseY) {
-    this.rotation += this.rotSpeed;
-
-    // Mouse gravity attraction
-    if (mouseX > 0 && mouseY > 0) {
-      const dx = mouseX - this.x;
-      const dy = mouseY - this.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 200 && dist > 5) {
-        const force = (1 - dist / 200) * this.gravityStrength;
-        this.vx += (dx / dist) * force;
-        this.vy += (dy / dist) * force;
-      }
-    }
-
-    if (this.phase === 'burst') {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.vx *= 0.98;
-      this.vy *= 0.98;
-      this.burstLife -= 0.015;
-      this.opacity = this.targetOpacity * this.burstLife;
-      this.size = this.baseSize * (1 + (1 - this.burstLife));
-      if (this.burstLife <= 0) this.reset();
-      return;
-    }
-
-    if (phase === 'spiral') {
-      this.distance += this.speed * (1 + phaseProgress * 2);
-      this.angle += this.spiralTightness;
-      const targetX = this.cx + Math.cos(this.angle) * this.distance;
-      const targetY = this.cy + Math.sin(this.angle) * this.distance;
-      this.x += (targetX - this.x) * 0.1 + this.vx;
-      this.y += (targetY - this.y) * 0.1 + this.vy;
-      this.opacity = Math.min(this.targetOpacity, phaseProgress * 3);
-      this.size = this.baseSize * (0.5 + phaseProgress * 0.5);
-      this.vx *= 0.95;
-      this.vy *= 0.95;
-      // Add trail during spiral
-      this.trail.push({ x: this.x, y: this.y, opacity: this.opacity * 0.4, size: this.size * 0.3 });
-      if (this.trail.length > 10) this.trail.shift();
-    } else if (phase === 'pattern') {
-      const patternPos = this.getPatternPosition();
-      const ease = 0.04;
-      this.x += (patternPos.x - this.x) * ease + this.vx;
-      this.y += (patternPos.y - this.y) * ease + this.vy;
-      this.opacity = this.targetOpacity;
-      this.size = this.baseSize;
-      this.vx *= 0.92;
-      this.vy *= 0.92;
-      this.trail = [];
-    } else if (phase === 'hold') {
-      this.patternT += 0.0008;
-      const patternPos = this.getPatternPosition();
-      this.x = patternPos.x + Math.sin(this.patternT * Math.PI * 2 + this.angle) * 4 + this.vx;
-      this.y = patternPos.y + Math.cos(this.patternT * Math.PI * 2 + this.angle) * 4 + this.vy;
-      this.opacity = this.targetOpacity * (0.8 + Math.sin(performance.now() * 0.001 + this.angle) * 0.2);
-      this.size = this.baseSize * (1 + Math.sin(performance.now() * 0.002) * 0.1);
-      this.vx *= 0.95;
-      this.vy *= 0.95;
-      this.trail = [];
-    } else if (phase === 'dissolve') {
-      this.driftX += (Math.random() - 0.5) * 3;
-      this.driftY += (Math.random() - 0.5) * 3;
-      this.x += this.driftX + this.vx;
-      this.y += this.driftY + this.vy;
-      this.opacity = this.targetOpacity * (1 - phaseProgress);
-      this.size = this.baseSize * (1 + phaseProgress * 0.5);
-      this.rotation += this.rotSpeed * 4;
-      this.vx *= 0.9;
-      this.vy *= 0.9;
-      this.trail = [];
-      if (phaseProgress > 0.95) this.reset();
-    }
-  }
-
-  getPatternPosition() {
-    const cx = this.cx;
-    const cy = this.cy;
-    const scale = Math.min(cx, cy) * 0.5;
-
-    if (this.patternIndex === 0) {
-      // Heart shape parametric
-      const t = this.patternT * Math.PI * 2;
-      const x = 16 * Math.pow(Math.sin(t), 3);
-      const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
-      return { x: cx + x * scale / 16, y: cy + y * scale / 16 };
-    } else if (this.patternIndex === 1) {
-      // Infinity symbol (lemniscate)
-      const t = this.patternT * Math.PI * 2;
-      const denom = 1 + Math.sin(t) * Math.sin(t);
-      const x = Math.sin(t) / denom;
-      const y = Math.sin(t) * Math.cos(t) / denom;
-      return { x: cx + x * scale * 0.9, y: cy + y * scale * 0.9 };
-    } else {
-      // Constellation (star pattern)
-      const idx = Math.floor(this.patternT * 12);
-      const angle = (idx / 12) * Math.PI * 2 + this.patternT * 0.3;
-      const dist = (0.25 + (this.patternT % 1) * 0.75) * scale;
-      return { x: cx + Math.cos(angle) * dist, y: cy + Math.sin(angle) * dist };
-    }
-  }
-
-  draw(ctx) {
-    // Draw trail
-    for (let i = 0; i < this.trail.length; i++) {
-      const t = this.trail[i];
-      const trailOpacity = (i / this.trail.length) * t.opacity;
-      ctx.globalAlpha = trailOpacity;
-      const gradient = ctx.createRadialGradient(t.x, t.y, 0, t.x, t.y, t.size * 2);
-      gradient.addColorStop(0, 'rgba(232, 160, 191, 0.8)');
-      gradient.addColorStop(1, 'rgba(167, 139, 250, 0)');
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(t.x, t.y, t.size * 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    // Draw particle with glow
-    ctx.globalAlpha = this.opacity;
-    ctx.save();
-    ctx.translate(this.x, this.y);
-    ctx.rotate(this.rotation);
-    ctx.font = `${this.size}px serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.shadowColor = 'rgba(232, 160, 191, 0.8)';
-    ctx.shadowBlur = 20;
-    ctx.fillText(this.emoji, 0, 0);
-    ctx.restore();
-    ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
+    setTimeout(() => { if (particle.parentNode) particle.remove(); }, duration * 1000 + 100);
   }
 }
 
-function drawStars(ctx, stars, w, h, time) {
-  stars.forEach(star => {
-    star.twinklePhase += star.twinkleSpeed;
-    const twinkle = 0.3 + Math.sin(star.twinklePhase) * 0.7;
-    ctx.globalAlpha = star.opacity * twinkle;
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-    ctx.fill();
-    // Star glow
-    if (star.size > 1.5) {
-      ctx.globalAlpha = star.opacity * twinkle * 0.3;
-      const g = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size * 4);
-      g.addColorStop(0, 'rgba(255,255,255,0.5)');
-      g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.size * 4, 0, Math.PI * 2);
-      ctx.fill();
-    }
+function spawnHeartRipple() {
+  if (!universeSkyActive) return;
+  const sky = document.getElementById('universeSky');
+  if (!sky) return;
+
+  const ripple = document.createElement('div');
+  ripple.className = 'sky-heart-ripple';
+  sky.appendChild(ripple);
+
+  setTimeout(() => { if (ripple.parentNode) ripple.remove(); }, 2500);
+}
+
+function generateGhosts() {
+  const container = document.getElementById('universeGhostSky');
+  if (!container) return;
+  container.innerHTML = '';
+
+  SKY_PHRASES.forEach((text, i) => {
+    const ghost = document.createElement('div');
+    ghost.className = 'sky-ghost';
+    const x = 5 + Math.random() * 90;
+    const y = 5 + Math.random() * 90;
+    const delay = i * 1.5 + Math.random();
+    const duration = 6 + Math.random() * 4;
+
+    ghost.textContent = text;
+    ghost.style.cssText = `
+      left:${x}%; top:${y}%;
+      animation-delay:${delay}s;
+      animation-duration:${duration}s;
+      font-size:${11 + Math.random() * 6}px;
+    `;
+    container.appendChild(ghost);
   });
-  ctx.globalAlpha = 1;
-}
-
-function drawNebula(ctx, nebula, w, h, time) {
-  nebula.forEach(cloud => {
-    cloud.x += cloud.driftX;
-    cloud.y += cloud.driftY;
-    if (cloud.x < -cloud.radius) cloud.x = w + cloud.radius;
-    if (cloud.x > w + cloud.radius) cloud.x = -cloud.radius;
-    if (cloud.y < -cloud.radius) cloud.y = h + cloud.radius;
-    if (cloud.y > h + cloud.radius) cloud.y = -cloud.radius;
-
-    const ng = ctx.createRadialGradient(cloud.x, cloud.y, 0, cloud.x, cloud.y, cloud.radius);
-    ng.addColorStop(0, `hsla(${cloud.hue + Math.sin(time * 0.0001) * 30}, 70%, 60%, ${cloud.opacity})`);
-    ng.addColorStop(0.5, `hsla(${cloud.hue + Math.sin(time * 0.0001) * 30}, 70%, 50%, ${cloud.opacity * 0.5})`);
-    ng.addColorStop(1, `hsla(${cloud.hue + Math.sin(time * 0.0001) * 30}, 70%, 40%, 0)`);
-    ctx.fillStyle = ng;
-    ctx.fillRect(cloud.x - cloud.radius, cloud.y - cloud.radius, cloud.radius * 2, cloud.radius * 2);
-  });
-}
-
-function drawBlackHole(ctx, cx, cy, time) {
-  const bhRadius = 35 + Math.sin(time * 0.0015) * 6;
-
-  // Gravitational lensing glow
-  const lensGlow = ctx.createRadialGradient(cx, cy, bhRadius * 0.8, cx, cy, bhRadius * 4);
-  lensGlow.addColorStop(0, 'rgba(0,0,0,0.95)');
-  lensGlow.addColorStop(0.2, 'rgba(20,10,40,0.7)');
-  lensGlow.addColorStop(0.4, 'rgba(60,30,90,0.4)');
-  lensGlow.addColorStop(0.7, 'rgba(100,50,120,0.15)');
-  lensGlow.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = lensGlow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, bhRadius * 4, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Photon ring (bright ring around event horizon)
-  const ringGradient = ctx.createRadialGradient(cx, cy, bhRadius * 0.9, cx, cy, bhRadius * 1.3);
-  ringGradient.addColorStop(0, 'rgba(232, 160, 191, 0)');
-  ringGradient.addColorStop(0.5, 'rgba(232, 160, 191, 0.6)');
-  ringGradient.addColorStop(0.7, 'rgba(167, 139, 250, 0.4)');
-  ringGradient.addColorStop(1, 'rgba(232, 160, 191, 0)');
-  ctx.fillStyle = ringGradient;
-  ctx.beginPath();
-  ctx.arc(cx, cy, bhRadius * 1.3, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Event horizon (dark center)
-  ctx.fillStyle = 'rgba(0,0,0,0.98)';
-  ctx.beginPath();
-  ctx.arc(cx, cy, bhRadius, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Accretion disk (rotating, glowing)
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(time * 0.0003);
-  const diskGradient = ctx.createRadialGradient(0, 0, bhRadius * 1.1, 0, 0, bhRadius * 2.8);
-  diskGradient.addColorStop(0, 'rgba(232, 160, 191, 0)');
-  diskGradient.addColorStop(0.3, 'rgba(232, 160, 191, 0.25)');
-  diskGradient.addColorStop(0.5, 'rgba(167, 139, 250, 0.35)');
-  diskGradient.addColorStop(0.7, 'rgba(232, 160, 191, 0.2)');
-  diskGradient.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = diskGradient;
-  ctx.beginPath();
-  ctx.ellipse(0, 0, bhRadius * 2.8, bhRadius * 0.6, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Dust rings
-  universeDustRings.forEach((ring, idx) => {
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(time * ring.speed + idx * 2);
-    ctx.scale(1, Math.cos(ring.tilt));
-    for (let i = 0; i < ring.particles; i++) {
-      const angle = (i / ring.particles) * Math.PI * 2;
-      const r = ring.radius + Math.sin(angle * 3 + time * 0.001) * 5;
-      const px = Math.cos(angle) * r;
-      const py = Math.sin(angle) * r;
-      ctx.globalAlpha = 0.3 + Math.sin(angle * 5 + time * 0.002) * 0.2;
-      ctx.fillStyle = `hsla(${ring.hue + Math.sin(time * 0.0005) * 20}, 70%, 70%, 0.8)`;
-      ctx.beginPath();
-      ctx.arc(px, py, 1.5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  });
-  ctx.globalAlpha = 1;
-}
-
-function drawGhostTexts(ctx, w, h, time) {
-  universeGhostTexts.forEach(ghost => {
-    ghost.phase += ghost.speed;
-    ghost.opacity = ghost.targetOpacity * (0.5 + Math.sin(ghost.phase) * 0.5);
-    ghost.y += Math.sin(ghost.phase * 2) * 0.3;
-
-    ctx.globalAlpha = ghost.opacity;
-    ctx.font = `${ghost.size}px 'Cormorant Garamond', serif`;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(200, 180, 255, 0.6)';
-    ctx.shadowColor = 'rgba(167, 139, 250, 0.5)';
-    ctx.shadowBlur = 15;
-    ctx.fillText(ghost.text, ghost.x, ghost.y);
-    ctx.shadowBlur = 0;
-  });
-  ctx.globalAlpha = 1;
-}
-
-function drawConstellationLines(ctx, particles, phase, phaseProgress) {
-  if (phase !== 'pattern' && phase !== 'hold') return;
-
-  const patternParticles = particles.filter(p => p.patternIndex === 2 && p.opacity > 0.3);
-  if (patternParticles.length < 3) return;
-
-  const lineOpacity = phase === 'pattern'
-    ? phaseProgress * 0.2
-    : (0.2 - Math.abs(0.5 - phaseProgress) * 0.15);
-
-  ctx.globalAlpha = lineOpacity;
-  ctx.strokeStyle = 'rgba(167, 139, 250, 0.6)';
-  ctx.lineWidth = 1;
-  ctx.shadowColor = 'rgba(167, 139, 250, 0.4)';
-  ctx.shadowBlur = 8;
-
-  for (let i = 0; i < patternParticles.length; i++) {
-    for (let j = i + 1; j < patternParticles.length; j++) {
-      const p1 = patternParticles[i];
-      const p2 = patternParticles[j];
-      const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-      if (dist < 120) {
-        const alpha = (1 - dist / 120) * lineOpacity;
-        ctx.globalAlpha = alpha;
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
-      }
-    }
-  }
-  ctx.globalAlpha = 1;
-  ctx.shadowBlur = 0;
-}
-
-function drawPulseRings(ctx, cx, cy, time) {
-  const pulseProgress = ((time - universeCycleStart) % 2500) / 2500;
-  const pulseRadius = 60 + pulseProgress * 200;
-  ctx.globalAlpha = (1 - pulseProgress) * 0.25;
-  ctx.strokeStyle = 'rgba(232, 160, 191, 0.4)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(cx, cy, pulseRadius, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Second ring
-  const pulse2 = ((time - universeCycleStart + 1250) % 2500) / 2500;
-  const radius2 = 60 + pulse2 * 200;
-  ctx.globalAlpha = (1 - pulse2) * 0.15;
-  ctx.strokeStyle = 'rgba(167, 139, 250, 0.3)';
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius2, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.globalAlpha = 1;
-}
-
-function drawWarpEffect(ctx, w, h, cx, cy, time) {
-  if (!universeWarpActive) return;
-  universeWarpTime += 0.016;
-  const progress = Math.min(universeWarpTime / 1.5, 1);
-
-  ctx.save();
-  ctx.globalAlpha = (1 - progress) * 0.3;
-  const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * progress);
-  gradient.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
-  gradient.addColorStop(0.5, 'rgba(232, 160, 191, 0.1)');
-  gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, w, h);
-
-  // Warp streaks
-  for (let i = 0; i < 20; i++) {
-    const angle = (i / 20) * Math.PI * 2 + time * 0.001;
-    const dist = 50 + progress * 300;
-    const x1 = cx + Math.cos(angle) * 50;
-    const y1 = cy + Math.sin(angle) * 50;
-    const x2 = cx + Math.cos(angle) * dist;
-    const y2 = cy + Math.sin(angle) * dist;
-    ctx.globalAlpha = (1 - progress) * 0.5;
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-    ctx.lineWidth = 2 * (1 - progress);
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-  }
-  ctx.restore();
-
-  if (progress >= 1) {
-    universeWarpActive = false;
-    universeWarpTime = 0;
-  }
-}
-
-function animateUniverse() {
-  if (!universeCtx || !universeCanvas) return;
-  const ctx = universeCtx;
-  const w = universeCanvas.width / window.devicePixelRatio;
-  const h = universeCanvas.height / window.devicePixelRatio;
-  const cx = w / 2;
-  const cy = h / 2;
-  const now = performance.now();
-
-  const totalCycleTime = CYCLE_PHASES.reduce((a, p) => a + p.duration, 0);
-  const elapsed = (now - universeCycleStart) % totalCycleTime;
-  let accumulated = 0;
-  let currentPhase = CYCLE_PHASES[0].name;
-  let phaseProgress = 0;
-  for (const phase of CYCLE_PHASES) {
-    if (elapsed < accumulated + phase.duration) {
-      currentPhase = phase.name;
-      phaseProgress = (elapsed - accumulated) / phase.duration;
-      break;
-    }
-    accumulated += phase.duration;
-  }
-
-  // Check for cycle reset
-  if (elapsed < 50 && universeCycle > 0) {
-    universeParticles.forEach(p => {
-      p.patternIndex = (p.patternIndex + 1) % 3;
-      p.patternT = Math.random();
-      p.reset();
-    });
-    showUniverseMemory();
-  }
-  universeCycle = Math.floor((now - universeCycleStart) / totalCycleTime);
-
-  // Background
-  const bgGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h));
-  bgGradient.addColorStop(0, '#1a0f3a');
-  bgGradient.addColorStop(0.3, '#0f0c29');
-  bgGradient.addColorStop(0.7, '#0a0818');
-  bgGradient.addColorStop(1, '#050510');
-  ctx.fillStyle = bgGradient;
-  ctx.fillRect(0, 0, w, h);
-
-  // Nebula
-  drawNebula(ctx, universeNebula, w, h, now);
-
-  // Parallax stars (far -> mid -> near)
-  drawStars(ctx, universeStarsFar, w, h, now);
-  drawStars(ctx, universeStarsMid, w, h, now);
-  drawStars(ctx, universeStarsNear, w, h, now);
-
-  // Black hole
-  drawBlackHole(ctx, cx, cy, now);
-
-  // Pulse rings
-  drawPulseRings(ctx, cx, cy, now);
-
-  // Love particles
-  universeParticles.forEach(p => {
-    p.update(currentPhase, phaseProgress, universeMouseX, universeMouseY);
-    p.draw(ctx);
-  });
-
-  // Constellation connections
-  drawConstellationLines(ctx, universeParticles, currentPhase, phaseProgress);
-
-  // Shooting stars
-  if (Math.random() < 0.004) {
-    universeShootingStars.push({
-      x: Math.random() * w,
-      y: Math.random() * h * 0.4,
-      vx: -4 - Math.random() * 5,
-      vy: 1 + Math.random() * 3,
-      length: 60 + Math.random() * 120,
-      opacity: 1,
-      hue: 280 + Math.random() * 60
-    });
-  }
-  universeShootingStars = universeShootingStars.filter(s => {
-    s.x += s.vx;
-    s.y += s.vy;
-    s.opacity -= 0.015;
-    if (s.opacity <= 0) return false;
-    ctx.globalAlpha = s.opacity;
-    ctx.strokeStyle = `hsla(${s.hue}, 80%, 80%, 0.9)`;
-    ctx.lineWidth = 2;
-    ctx.shadowColor = `hsla(${s.hue}, 80%, 70%, 0.6)`;
-    ctx.shadowBlur = 10;
-    ctx.beginPath();
-    ctx.moveTo(s.x, s.y);
-    ctx.lineTo(s.x - s.vx * s.length / 15, s.y - s.vy * s.length / 15);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    return true;
-  });
-  ctx.globalAlpha = 1;
-
-  // Ghost texts
-  drawGhostTexts(ctx, w, h, now);
-
-  // Warp effect
-  drawWarpEffect(ctx, w, h, cx, cy, now);
-
-  // Heartbeat sync for center heart
-  universeHeartPulse = Math.sin(now * 0.003) * 0.5 + 0.5;
-  const heart = document.getElementById('universeCenterHeart');
-  if (heart) {
-    const scale = 1 + universeHeartPulse * 0.15;
-    heart.style.transform = `translate(-50%, -50%) scale(${scale})`;
-  }
-
-  universeAnimId = requestAnimationFrame(animateUniverse);
 }
 
 function startUniverseTypewriter() {
@@ -2039,19 +1545,19 @@ function startUniverseTypewriter() {
   let isDeleting = false;
 
   function typeNext() {
-    if (!letterEl) return;
+    if (!letterEl || !universeSkyActive) return;
     const letters = evt.loveLetters;
     const currentText = letters[letterIdx];
 
     if (!isDeleting) {
       if (charIdx === 0) {
         letterEl.style.opacity = '0';
-        setTimeout(() => { if (letterEl) letterEl.style.opacity = '1'; }, 150);
+        setTimeout(() => { if (letterEl) letterEl.style.opacity = '1'; }, 200);
       }
       if (charIdx < currentText.length) {
-        letterEl.innerHTML = currentText.substring(0, charIdx + 1) + '<span class="universe-cursor">|</span>';
+        letterEl.innerHTML = currentText.substring(0, charIdx + 1) + '<span class="sky-cursor">|</span>';
         charIdx++;
-        universeTypewriterTimeout = setTimeout(typeNext, 35 + Math.random() * 25);
+        universeTypewriterTimeout = setTimeout(typeNext, 40 + Math.random() * 20);
       } else {
         letterEl.innerHTML = currentText;
         universeTypewriterTimeout = setTimeout(() => {
@@ -2061,9 +1567,9 @@ function startUniverseTypewriter() {
       }
     } else {
       if (charIdx > 0) {
-        letterEl.innerHTML = currentText.substring(0, charIdx - 1) + '<span class="universe-cursor">|</span>';
+        letterEl.innerHTML = currentText.substring(0, charIdx - 1) + '<span class="sky-cursor">|</span>';
         charIdx--;
-        universeTypewriterTimeout = setTimeout(typeNext, 20);
+        universeTypewriterTimeout = setTimeout(typeNext, 18);
       } else {
         isDeleting = false;
         letterIdx = (letterIdx + 1) % letters.length;
@@ -2077,21 +1583,27 @@ function startUniverseTypewriter() {
 
 function showUniverseMemory() {
   const evt = EVENTS.find(e => e.id === 'universe-of-love');
-  if (!evt || !evt.memoryImages) return;
-  const container = document.getElementById('universeMemory');
+  if (!evt || !evt.memoryImages || !universeSkyActive) return;
+
+  const container = document.getElementById('universeMemorySky');
   if (!container) return;
 
   container.innerHTML = '';
   const imgSrc = evt.memoryImages[Math.floor(Math.random() * evt.memoryImages.length)];
   const img = document.createElement('div');
-  img.className = 'universe-memory';
-  const rotation = (Math.random() - 0.5) * 25;
-  const left = 8 + Math.random() * 70;
-  const top = 8 + Math.random() * 60;
-  img.style.cssText = `background-image:url('${imgSrc}');left:${left}%;top:${top}%;--rotation:${rotation}deg;`;
+  img.className = 'sky-memory-photo';
+  const left = 10 + Math.random() * 70;
+  const top = 15 + Math.random() * 55;
+  const rotation = (Math.random() - 0.5) * 20;
+
+  img.style.cssText = `
+    background-image:url('${imgSrc}');
+    left:${left}%; top:${top}%;
+    --rotation:${rotation}deg;
+  `;
   container.appendChild(img);
 
-  setTimeout(() => img.classList.add('visible'), 100);
-  setTimeout(() => img.classList.remove('visible'), 5000);
-  setTimeout(() => { if (img.parentNode) img.parentNode.removeChild(img); }, 6500);
+  requestAnimationFrame(() => img.classList.add('visible'));
+  setTimeout(() => img.classList.remove('visible'), 4500);
+  setTimeout(() => { if (img.parentNode) img.remove(); }, 6000);
 }
