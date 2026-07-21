@@ -937,7 +937,7 @@ Now go show them why.</strong>`,
       primary: '#e8a0bf',
       secondary: '#a78bfa',
       accent: '#fbbf24',
-      bg: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
+      bg: 'linear-gradient(135deg, #0a0518, #1a0f3a, #0f0c29)',
       text: '#f0e6ff',
       muted: '#c4b5fd'
     },
@@ -965,579 +965,277 @@ Now go show them why.</strong>`,
   }
 ];
 
-// ===================== EVENTS RENDERER =====================
-function renderEventButtons() {
-  const sidebar = document.getElementById('eventsSidebar');
-  if (!sidebar) return;
-  sidebar.innerHTML = '';
-  EVENTS.forEach(evt => {
-    const btn = document.createElement('button');
-    btn.className = 'event-btn' + (evt.isNew ? ' new' : '');
-    btn.innerHTML = evt.icon + ' ' + evt.label;
-    btn.setAttribute('data-event', evt.id);
-    btn.onclick = () => openEventPopup(evt.id);
-    sidebar.appendChild(btn);
-  });
-}
-
-let currentEventId = null;
-let eventQuoteInterval = null;
-let eventQuoteIndex = 0;
-
-function openEventPopup(eventId) {
-  const evt = EVENTS.find(e => e.id === eventId);
-  if (!evt) return;
-  currentEventId = eventId;
-  eventQuoteIndex = 0;
-
-  const overlay = document.getElementById('eventOverlay');
-  const content = document.getElementById('eventContent');
-  const popup = document.querySelector('.event-popup');
-  if (!overlay || !content) return;
-
-  if (popup) popup.classList.remove('universe-active');
-
-  content.innerHTML = buildEventHTML(evt);
-  overlay.classList.add('active');
-  document.body.style.overflow = 'hidden';
-
-  if (evt.type === 'universe') {
-    if (popup) popup.classList.add('universe-active');
-    setTimeout(() => {
-      initUniverseSky();
-      startUniverseTypewriter();
-      showUniverseMemory();
-    }, 300);
-  } else {
-    setTimeout(() => {
-      const breatheCircle = document.getElementById('eventBreatheCircle');
-      if (breatheCircle) {
-        breatheCircle.addEventListener('click', function() {
-          this.classList.toggle('breathing-active');
-          if (this.classList.contains('breathing-active')) {
-            this.textContent = 'Breathe...';
-          } else {
-            this.textContent = evt.breathe ? evt.breathe.label : 'Breathe';
-          }
-        });
-      }
-    }, 100);
-    startEventQuotes(evt);
-
-    setTimeout(() => {
-      const fill = document.getElementById('eventProgressFill');
-      if (fill) fill.classList.add('full');
-    }, 500);
-
-    setTimeout(() => {
-      typeEventLetter(evt.letter);
-    }, 800);
-  }
-
-  setTimeout(setupCursorHover, 100);
-}
-
-function buildEventHTML(evt) {
-  if (evt.type === 'universe') {
-    return buildUniverseEventHTML(evt);
-  }
-
-  const quotesHTML = evt.quotes.map((q, i) => 
-    `<div class="event-quote-text" id="eventQuoteText${i}" style="display:${i===0?'block':'none'}">${q.text}</div>
-     <div class="event-quote-author" id="eventQuoteAuthor${i}" style="display:${i===0?'block':'none'}">— ${q.author}</div>`
-  ).join('');
-
-  const dotsHTML = evt.quotes.map((_, i) => 
-    `<div class="event-dot ${i===0?'active':''}" onclick="showEventQuote(${i})" data-idx="${i}"></div>`
-  ).join('');
-
-  const cardsHTML = evt.cards.map(c => 
-    `<div class="event-card" onclick="revealEventCard(this)">
-      <div class="event-card-icon">${c.icon}</div>
-      <div class="event-card-title">${c.title}</div>
-      <div class="event-card-hidden">${c.hidden}</div>
-    </div>`
-  ).join('');
-
-  return `
-    <div class="event-ornament">${evt.ornament}</div>
-    <div class="event-title">${evt.title}</div>
-    <div class="event-subtitle">${evt.subtitle}</div>
-    <div class="event-divider"></div>
-
-    <div class="event-breathe-section">
-      <div class="event-breathe-text">${evt.breathe.text}</div>
-      <div class="event-breathe-circle" id="eventBreatheCircle">${evt.breathe.label}</div>
-    </div>
-
-    <div class="event-message">${evt.message}</div>
-
-    <div class="event-progress-section">
-      <div class="event-progress-label">${evt.progress.label}</div>
-      <div class="event-progress-bar">
-        <div class="event-progress-fill" id="eventProgressFill"></div>
-      </div>
-      <div class="event-progress-text" id="eventProgressText">${evt.progress.text}</div>
-    </div>
-
-    <div class="event-quote-box">
-      ${quotesHTML}
-      <div class="event-quote-dots">${dotsHTML}</div>
-    </div>
-
-    <div class="event-heart-section">
-      <div class="event-heart-title">${evt.heart.title}</div>
-      <div class="event-heart-container" onclick="revealEventHeart()">
-        <svg class="event-heart-svg" viewBox="0 0 24 24" fill="none" stroke="#6b9b7a" stroke-width="1.5">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          <path d="M12 8v4M10 10h4" stroke="#e07a5f" stroke-width="1" opacity="0.6"/>
-        </svg>
-        <div class="event-steth-line" id="eventStethLine"></div>
-      </div>
-      <div class="event-heart-label" id="eventHeartLabel">${evt.heart.label}</div>
-    </div>
-
-    <div class="event-cards">${cardsHTML}</div>
-
-    <div class="event-letter">
-      <div class="event-letter-text" id="eventLetterText"></div>
-      <div class="event-signature" id="eventLetterSig" style="opacity:0;transition:opacity 1s ease 1s;">— Infinite 💚</div>
-    </div>
-
-    <div class="event-footer">${evt.footer}</div>
-  `;
-}
-
-function showEventQuote(index) {
-  const dots = document.querySelectorAll('.event-dot');
-  dots.forEach((d, i) => {
-    d.classList.toggle('active', i === index);
-    const text = document.getElementById('eventQuoteText' + i);
-    const author = document.getElementById('eventQuoteAuthor' + i);
-    if (text) text.style.display = i === index ? 'block' : 'none';
-    if (author) author.style.display = i === index ? 'block' : 'none';
-  });
-  eventQuoteIndex = index;
-}
-
-function startEventQuotes(evt) {
-  if (eventQuoteInterval) clearInterval(eventQuoteInterval);
-  eventQuoteInterval = setInterval(() => {
-    eventQuoteIndex = (eventQuoteIndex + 1) % evt.quotes.length;
-    showEventQuote(eventQuoteIndex);
-  }, 5000);
-}
-
-function stopEventQuotes() {
-  if (eventQuoteInterval) {
-    clearInterval(eventQuoteInterval);
-    eventQuoteInterval = null;
-  }
-}
-
-function closeEventPopup(e) {
-  if (e && e.target !== document.getElementById('eventOverlay')) return;
-  const overlay = document.getElementById('eventOverlay');
-  const popup = document.querySelector('.event-popup');
-  if (overlay) overlay.classList.remove('active');
-  if (popup) popup.classList.remove('universe-active');
-  document.body.style.overflow = '';
-  stopEventQuotes();
-  destroyUniverseSky();
-  const letterText = document.getElementById('eventLetterText');
-  const letterSig = document.getElementById('eventLetterSig');
-  const progressFill = document.getElementById('eventProgressFill');
-  const stethLine = document.getElementById('eventStethLine');
-  const heartLabel = document.getElementById('eventHeartLabel');
-  if (letterText) letterText.innerHTML = '';
-  if (letterSig) letterSig.style.opacity = '0';
-  if (progressFill) progressFill.classList.remove('full');
-  if (stethLine) stethLine.classList.remove('extended');
-  if (heartLabel) heartLabel.classList.remove('show');
-  document.querySelectorAll('.event-card').forEach(c => c.classList.remove('revealed'));
-  currentEventId = null;
-}
-
-function revealEventHeart() {
-  const stethLine = document.getElementById('eventStethLine');
-  const heartLabel = document.getElementById('eventHeartLabel');
-  if (stethLine) stethLine.classList.add('extended');
-  setTimeout(() => {
-    if (heartLabel) heartLabel.classList.add('show');
-  }, 800);
-}
-
-function revealEventCard(el) {
-  if (el.classList.contains('revealed')) return;
-  el.classList.add('revealed');
-  const rect = el.getBoundingClientRect();
-  for (let i = 0; i < 8; i++) {
-    const c = document.createElement('div');
-    c.style.cssText = 'position:fixed;left:' + (rect.left + rect.width / 2) + 'px;top:' + rect.top + 'px;width:5px;height:5px;border-radius:50%;pointer-events:none;z-index:10000;transition:all 0.6s ease-out;';
-    const colors = ['#6b9b7a', '#7a9eb8', '#e07a5f', '#d4a574'];
-    c.style.background = colors[Math.floor(Math.random() * colors.length)];
-    document.body.appendChild(c);
-    setTimeout(() => {
-      c.style.transform = 'translate(' + (Math.random() - 0.5) * 60 + 'px,' + (-Math.random() * 50) + 'px) scale(0)';
-      c.style.opacity = '0';
-    }, 10);
-    setTimeout(() => c.remove(), 700);
-  }
-}
-
-function typeEventLetter(text) {
-  const el = document.getElementById('eventLetterText');
-  if (!el) return;
-  el.innerHTML = '';
-  let i = 0;
-  function type() {
-    if (i < text.length) {
-      const char = text.charAt(i);
-      if (char === '<') {
-        const close = text.indexOf('>', i);
-        if (close !== -1) {
-          el.innerHTML += text.substring(i, close + 1);
-          i = close + 1;
-        }
-      } else {
-        el.innerHTML += char;
-        i++;
-      }
-      setTimeout(type, 20);
-    } else {
-      const sig = document.getElementById('eventLetterSig');
-      if (sig) sig.style.opacity = '1';
-    }
-  }
-  type();
-}
-
-// ===================== BALLOON KEYFRAMES INJECT =====================
-const balloonStyle = document.createElement('style');
-balloonStyle.textContent = `
-@keyframes balloonUp{
-  0%{transform:translateY(0) translateX(0) scale(0.6);opacity:0}
-  10%{opacity:0.9;transform:translateY(-10vh) translateX(10px) scale(1)}
-  100%{transform:translateY(-110vh) translateX(-30px) scale(1.1);opacity:0}
-}
-`;
-document.head.appendChild(balloonStyle);
-
-// ===================== INIT =====================
-loadSong(0);
-renderEventButtons();
-setupCursorHover();
-showToast('Welcome, Dal. Use arrow keys or scroll to navigate 💫');
-
-
-// ===================== UNIVERSE OF LOVE — CELESTIAL SKY =====================
-// Lightweight DOM-based cosmic experience. No canvas. Pure CSS magic + JS.
-
-let universeSkyActive = false;
-let universeTypewriterTimeout = null;
-let universeMemoryInterval = null;
-let universeShootingInterval = null;
-let universeSpawnStarHandler = null;
-let universeHeartClickHandler = null;
-
-const LOVE_EMOJIS = ['💖','💫','✨','💛','💕','🌟','💗','💘','💝','🌙','⭐','💓','🪐','🌠','💜','🔮'];
-const SKY_PHRASES = [
-  'Infinite love', 'Forever Dal', 'My universe', 'Stardust & you',
-  'Eternal', 'Beyond time', 'My everything', 'Cosmic bond',
-  'Love transcends', 'You are my light', 'Soul connection', 'Destiny',
-  'Always you', 'My star', 'Eternal flame', 'Heart of gold'
-];
 
 function buildUniverseEventHTML(evt) {
   return `
-    <div class="universe-sky" id="universeSky">
-      <div class="universe-stars" id="universeStars"></div>
-      <div class="universe-nebula-sky" id="universeNebula"></div>
-      <div class="universe-shooting-stars" id="universeShootingStars"></div>
+    <div class="garden-wrapper" id="gardenWrapper">
+      <div class="garden-stars-bg" id="gardenStarsBg"></div>
+      <div class="garden-shooting-container" id="gardenShooting"></div>
 
-      <div class="universe-sun" id="universeSun" title="Tap to send love">💖</div>
-      <div class="universe-sun-glow"></div>
-      <div class="universe-sun-ring"></div>
-      <div class="universe-sun-ring" style="animation-delay:0.8s"></div>
+      <div class="garden-title">Dal's Constellation Garden</div>
+      <div class="garden-subtitle">Touch the stars to connect them with love</div>
 
-      <div class="universe-orbits" id="universeOrbits"></div>
+      <div class="garden-constellation" id="gardenConstellation">
+        <svg class="garden-connections" id="gardenConnections" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="loveLine" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#e8a0bf;stop-opacity:0.8" />
+              <stop offset="50%" style="stop-color:#a78bfa;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#e8a0bf;stop-opacity:0.8" />
+            </linearGradient>
+          </defs>
+        </svg>
 
-      <div class="universe-letter" id="universeLetter"></div>
-      <div class="universe-memory-sky" id="universeMemorySky"></div>
+        <div class="garden-star" data-star="0" style="left:15%;top:20%">
+          <div class="garden-star-photo" style="background-image:url('${evt.memoryImages[0]}')"></div>
+          <div class="garden-star-label">Beautiful</div>
+          <div class="garden-star-glow"></div>
+        </div>
 
-      <div class="universe-title">Universe of Love</div>
-      <div class="universe-subtitle">For Dal — Across All Space & Time</div>
+        <div class="garden-star" data-star="1" style="left:75%;top:15%">
+          <div class="garden-star-photo" style="background-image:url('${evt.memoryImages[1]}')"></div>
+          <div class="garden-star-label">Charming</div>
+          <div class="garden-star-glow"></div>
+        </div>
 
-      <div class="universe-ghost-sky" id="universeGhostSky"></div>
-      <div class="universe-hint">Click anywhere to plant a star ✨</div>
+        <div class="garden-star" data-star="2" style="left:50%;top:55%">
+          <div class="garden-star-photo" style="background-image:url('${evt.memoryImages[2]}')"></div>
+          <div class="garden-star-label">Cheerful</div>
+          <div class="garden-star-glow"></div>
+        </div>
+
+        <div class="garden-star" data-star="3" style="left:20%;top:70%">
+          <div class="garden-star-photo" style="background-image:url('${evt.memoryImages[3]}')"></div>
+          <div class="garden-star-label">Perfect</div>
+          <div class="garden-star-glow"></div>
+        </div>
+
+        <div class="garden-star" data-star="4" style="left:80%;top:65%">
+          <div class="garden-star-photo" style="background-image:url('${evt.memoryImages[4]}')"></div>
+          <div class="garden-star-label">Queen</div>
+          <div class="garden-star-glow"></div>
+        </div>
+
+        <div class="garden-center-heart" id="gardenCenterHeart">💖</div>
+      </div>
+
+      <div class="garden-letter" id="gardenLetter"></div>
+      <div class="garden-connections-count" id="gardenCount">Connect the stars 💫</div>
+      <div class="garden-floating-hearts" id="gardenHearts"></div>
     </div>
   `;
 }
 
+// ===================== CONSTELLATION GARDEN =====================
+// Dal's photos are the stars. Click them to connect with glowing love lines.
+// Lightweight DOM-based. No canvas. Pure CSS + minimal JS.
+
+let gardenActive = false;
+let gardenTypewriterTimeout = null;
+let gardenShootingInterval = null;
+let gardenHeartsInterval = null;
+let gardenConnectedStars = new Set();
+let gardenLastStar = null;
+
 function initUniverseSky() {
-  universeSkyActive = true;
-  const sky = document.getElementById('universeSky');
-  if (!sky) return;
+  gardenActive = true;
+  gardenConnectedStars = new Set();
+  gardenLastStar = null;
 
-  generateStars();
-  generateNebula();
-  generateOrbits();
-  generateGhosts();
+  generateGardenStars();
+  startGardenTypewriter();
+  startGardenShootingStars();
+  startGardenFloatingHearts();
 
-  // Shooting stars every 3-7 seconds
-  universeShootingInterval = setInterval(spawnShootingStar, 4000 + Math.random() * 4000);
+  // Setup star click handlers
+  document.querySelectorAll('.garden-star').forEach(star => {
+    star.addEventListener('click', onGardenStarClick);
+  });
 
-  // Memory photos every 6 seconds
-  universeMemoryInterval = setInterval(showUniverseMemory, 6000);
-
-  // Click to spawn star
-  universeSpawnStarHandler = function(e) {
-    if (!universeSkyActive) return;
-    const rect = sky.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    spawnStarAt(x, y);
-  };
-  sky.addEventListener('click', universeSpawnStarHandler);
-
-  // Heart burst
-  const sun = document.getElementById('universeSun');
-  if (sun) {
-    universeHeartClickHandler = function(e) {
-      e.stopPropagation();
-      spawnLoveBurst();
-      spawnHeartRipple();
-    };
-    sun.addEventListener('click', universeHeartClickHandler);
+  // Center heart burst
+  const heart = document.getElementById('gardenCenterHeart');
+  if (heart) {
+    heart.addEventListener('click', onGardenHeartBurst);
   }
-
-  // Start typewriter
-  setTimeout(startUniverseTypewriter, 500);
-  // First memory immediately
-  setTimeout(showUniverseMemory, 800);
 }
 
 function destroyUniverseSky() {
-  universeSkyActive = false;
-  if (universeTypewriterTimeout) { clearTimeout(universeTypewriterTimeout); universeTypewriterTimeout = null; }
-  if (universeMemoryInterval) { clearInterval(universeMemoryInterval); universeMemoryInterval = null; }
-  if (universeShootingInterval) { clearInterval(universeShootingInterval); universeShootingInterval = null; }
-
-  const sky = document.getElementById('universeSky');
-  if (sky && universeSpawnStarHandler) {
-    sky.removeEventListener('click', universeSpawnStarHandler);
-  }
-  const sun = document.getElementById('universeSun');
-  if (sun && universeHeartClickHandler) {
-    sun.removeEventListener('click', universeHeartClickHandler);
-  }
-  universeSpawnStarHandler = null;
-  universeHeartClickHandler = null;
+  gardenActive = false;
+  if (gardenTypewriterTimeout) { clearTimeout(gardenTypewriterTimeout); gardenTypewriterTimeout = null; }
+  if (gardenShootingInterval) { clearInterval(gardenShootingInterval); gardenShootingInterval = null; }
+  if (gardenHeartsInterval) { clearInterval(gardenHeartsInterval); gardenHeartsInterval = null; }
+  gardenConnectedStars.clear();
+  gardenLastStar = null;
 }
 
-function generateStars() {
-  const container = document.getElementById('universeStars');
-  if (!container) return;
-  container.innerHTML = '';
+function generateGardenStars() {
+  const stars = document.querySelectorAll('.garden-star');
+  stars.forEach((star, i) => {
+    // Stagger entrance animation
+    star.style.animationDelay = `${i * 0.3}s`;
+    star.classList.add('garden-star-enter');
 
-  for (let i = 0; i < 80; i++) {
-    const star = document.createElement('div');
-    star.className = 'sky-star';
-    const size = 1 + Math.random() * 2.5;
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    const delay = Math.random() * 5;
-    const duration = 2 + Math.random() * 4;
-    const opacity = 0.3 + Math.random() * 0.7;
-
-    star.style.cssText = `
-      width:${size}px; height:${size}px;
-      left:${x}%; top:${y}%;
-      animation-delay:${delay}s;
-      animation-duration:${duration}s;
-      opacity:${opacity};
-    `;
-    container.appendChild(star);
-  }
-}
-
-function spawnStarAt(x, y) {
-  const container = document.getElementById('universeStars');
-  if (!container || !universeSkyActive) return;
-
-  const star = document.createElement('div');
-  star.className = 'sky-star spawned';
-  const size = 2 + Math.random() * 3;
-  star.style.cssText = `
-    width:${size}px; height:${size}px;
-    left:${x}px; top:${y}px;
-    opacity:1;
-    background:#fff;
-    box-shadow:0 0 10px rgba(255,255,255,0.8),0 0 20px rgba(232,160,191,0.4);
-  `;
-  container.appendChild(star);
-
-  // Fade out and remove
-  setTimeout(() => { star.style.opacity = '0'; }, 2000);
-  setTimeout(() => { if (star.parentNode) star.remove(); }, 3500);
-}
-
-function generateNebula() {
-  const container = document.getElementById('universeNebula');
-  if (!container) return;
-  container.innerHTML = '';
-
-  for (let i = 0; i < 4; i++) {
-    const cloud = document.createElement('div');
-    cloud.className = 'sky-nebula';
-    const x = 10 + Math.random() * 80;
-    const y = 10 + Math.random() * 80;
-    const size = 150 + Math.random() * 250;
-    const hue = 260 + Math.random() * 60;
-    const delay = Math.random() * 10;
-
-    cloud.style.cssText = `
-      left:${x}%; top:${y}%;
-      width:${size}px; height:${size}px;
-      background:radial-gradient(circle, hsla(${hue},70%,60%,0.08) 0%, transparent 70%);
-      animation-delay:${delay}s;
-    `;
-    container.appendChild(cloud);
-  }
-}
-
-function generateOrbits() {
-  const container = document.getElementById('universeOrbits');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const evt = EVENTS.find(e => e.id === 'universe-of-love');
-  const images = evt ? evt.memoryImages : [];
-
-  // 5 orbiting bodies: 3 photos + 2 emojis
-  const bodies = [
-    { type: 'photo', src: images[0] || '', orbit: 1, duration: 25, size: 50, startAngle: 0 },
-    { type: 'emoji', content: '💫', orbit: 2, duration: 35, size: 32, startAngle: 72 },
-    { type: 'photo', src: images[1] || '', orbit: 3, duration: 45, size: 40, startAngle: 144 },
-    { type: 'emoji', content: '✨', orbit: 2, duration: 30, size: 28, startAngle: 216 },
-    { type: 'photo', src: images[2] || '', orbit: 1, duration: 20, size: 45, startAngle: 288 },
-  ];
-
-  bodies.forEach((body, i) => {
-    const el = document.createElement('div');
-    el.className = 'sky-orbit-body';
-    const radius = 80 + body.orbit * 55;
-
-    if (body.type === 'photo' && body.src) {
-      el.innerHTML = `<div class="sky-orbit-photo" style="background-image:url('${body.src}')"></div>`;
-    } else {
-      el.innerHTML = `<div class="sky-orbit-emoji">${body.content}</div>`;
+    // Random float animation delay for each star
+    const glow = star.querySelector('.garden-star-glow');
+    if (glow) {
+      glow.style.animationDelay = `${Math.random() * 3}s`;
     }
-
-    el.style.cssText = `
-      --orbit-radius:${radius}px;
-      --orbit-duration:${body.duration}s;
-      --orbit-delay:${-body.duration * (body.startAngle / 360)}s;
-      width:${body.size}px; height:${body.size}px;
-      z-index:${10 + i};
-    `;
-    container.appendChild(el);
   });
 }
 
-function spawnShootingStar() {
-  if (!universeSkyActive) return;
-  const container = document.getElementById('universeShootingStars');
-  if (!container) return;
+function onGardenStarClick(e) {
+  if (!gardenActive) return;
+  const star = e.currentTarget;
+  const starId = star.dataset.star;
 
-  const star = document.createElement('div');
-  star.className = 'sky-shooting-star';
-  const y = 5 + Math.random() * 40;
-  const duration = 1 + Math.random() * 1.5;
-  const delay = Math.random() * 0.5;
+  // Toggle active state
+  if (gardenConnectedStars.has(starId)) {
+    gardenConnectedStars.delete(starId);
+    star.classList.remove('garden-star-active');
+  } else {
+    gardenConnectedStars.add(starId);
+    star.classList.add('garden-star-active');
+    spawnGardenSparkles(star);
+  }
 
-  star.style.cssText = `
-    top:${y}%;
-    animation-duration:${duration}s;
-    animation-delay:${delay}s;
-  `;
-  container.appendChild(star);
+  // Draw connection line from previous star
+  if (gardenLastStar && gardenLastStar !== starId) {
+    drawGardenLine(gardenLastStar, starId);
+  }
+  gardenLastStar = starId;
 
-  setTimeout(() => { if (star.parentNode) star.remove(); }, (duration + delay + 0.5) * 1000);
-}
+  // Update count text
+  updateGardenCount();
 
-function spawnLoveBurst() {
-  if (!universeSkyActive) return;
-  const sky = document.getElementById('universeSky');
-  if (!sky) return;
-
-  const rect = sky.getBoundingClientRect();
-  const cx = rect.width / 2;
-  const cy = rect.height / 2;
-
-  for (let i = 0; i < 16; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'sky-love-burst';
-    const angle = (i / 16) * Math.PI * 2;
-    const dist = 60 + Math.random() * 120;
-    const emoji = LOVE_EMOJIS[Math.floor(Math.random() * LOVE_EMOJIS.length)];
-    const duration = 1.5 + Math.random() * 1;
-
-    particle.textContent = emoji;
-    particle.style.cssText = `
-      left:${cx}px; top:${cy}px;
-      --burst-tx:${Math.cos(angle) * dist}px;
-      --burst-ty:${Math.sin(angle) * dist}px;
-      --burst-rot:${Math.random() * 360}deg;
-      animation-duration:${duration}s;
-      font-size:${16 + Math.random() * 12}px;
-    `;
-    sky.appendChild(particle);
-
-    setTimeout(() => { if (particle.parentNode) particle.remove(); }, duration * 1000 + 100);
+  // If all 5 connected, celebrate!
+  if (gardenConnectedStars.size === 5) {
+    celebrateGardenComplete();
   }
 }
 
-function spawnHeartRipple() {
-  if (!universeSkyActive) return;
-  const sky = document.getElementById('universeSky');
-  if (!sky) return;
+function drawGardenLine(fromId, toId) {
+  const svg = document.getElementById('gardenConnections');
+  const fromStar = document.querySelector(`.garden-star[data-star="${fromId}"]`);
+  const toStar = document.querySelector(`.garden-star[data-star="${toId}"]`);
+  if (!svg || !fromStar || !toStar) return;
 
-  const ripple = document.createElement('div');
-  ripple.className = 'sky-heart-ripple';
-  sky.appendChild(ripple);
+  const constellation = document.getElementById('gardenConstellation');
+  const rect = constellation.getBoundingClientRect();
+  const fromRect = fromStar.getBoundingClientRect();
+  const toRect = toStar.getBoundingClientRect();
 
-  setTimeout(() => { if (ripple.parentNode) ripple.remove(); }, 2500);
+  const x1 = fromRect.left + fromRect.width / 2 - rect.left;
+  const y1 = fromRect.top + fromRect.height / 2 - rect.top;
+  const x2 = toRect.left + toRect.width / 2 - rect.left;
+  const y2 = toRect.top + toRect.height / 2 - rect.top;
+
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', x1);
+  line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2);
+  line.setAttribute('y2', y2);
+  line.setAttribute('stroke', 'url(#loveLine)');
+  line.setAttribute('stroke-width', '2');
+  line.setAttribute('stroke-linecap', 'round');
+  line.style.opacity = '0';
+  line.style.transition = 'opacity 0.8s ease';
+
+  svg.appendChild(line);
+  requestAnimationFrame(() => { line.style.opacity = '1'; });
 }
 
-function generateGhosts() {
-  const container = document.getElementById('universeGhostSky');
-  if (!container) return;
-  container.innerHTML = '';
+function spawnGardenSparkles(star) {
+  const rect = star.getBoundingClientRect();
+  const wrapper = document.getElementById('gardenWrapper');
+  if (!wrapper) return;
 
-  SKY_PHRASES.forEach((text, i) => {
-    const ghost = document.createElement('div');
-    ghost.className = 'sky-ghost';
-    const x = 5 + Math.random() * 90;
-    const y = 5 + Math.random() * 90;
-    const delay = i * 1.5 + Math.random();
-    const duration = 6 + Math.random() * 4;
-
-    ghost.textContent = text;
-    ghost.style.cssText = `
-      left:${x}%; top:${y}%;
-      animation-delay:${delay}s;
-      animation-duration:${duration}s;
-      font-size:${11 + Math.random() * 6}px;
+  for (let i = 0; i < 8; i++) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'garden-sparkle';
+    const angle = (i / 8) * Math.PI * 2;
+    const dist = 30 + Math.random() * 20;
+    sparkle.style.cssText = `
+      left: ${rect.left + rect.width/2 - wrapper.getBoundingClientRect().left}px;
+      top: ${rect.top + rect.height/2 - wrapper.getBoundingClientRect().top}px;
+      --sparkle-tx: ${Math.cos(angle) * dist}px;
+      --sparkle-ty: ${Math.sin(angle) * dist}px;
     `;
-    container.appendChild(ghost);
-  });
+    sparkle.textContent = ['✨','💫','💖','⭐'][Math.floor(Math.random()*4)];
+    wrapper.appendChild(sparkle);
+    setTimeout(() => { if (sparkle.parentNode) sparkle.remove(); }, 1200);
+  }
 }
 
-function startUniverseTypewriter() {
+function updateGardenCount() {
+  const countEl = document.getElementById('gardenCount');
+  if (!countEl) return;
+  const count = gardenConnectedStars.size;
+  const labels = [
+    'Connect the stars 💫',
+    '1 star lit ✨',
+    '2 stars connected 💕',
+    '3 stars shining 🌟',
+    '4 stars glowing 💗',
+    'All stars connected! The universe is complete 💖'
+  ];
+  countEl.textContent = labels[count] || labels[0];
+}
+
+function celebrateGardenComplete() {
+  const wrapper = document.getElementById('gardenWrapper');
+  if (!wrapper) return;
+
+  // Burst of hearts
+  for (let i = 0; i < 20; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'garden-celebration-heart';
+    heart.style.left = `${10 + Math.random() * 80}%`;
+    heart.style.top = `${10 + Math.random() * 80}%`;
+    heart.style.animationDelay = `${Math.random() * 0.5}s`;
+    heart.textContent = ['💖','💗','💕','💝','💘'][Math.floor(Math.random()*5)];
+    wrapper.appendChild(heart);
+    setTimeout(() => { if (heart.parentNode) heart.remove(); }, 3000);
+  }
+
+  // Show special message
+  const countEl = document.getElementById('gardenCount');
+  if (countEl) {
+    countEl.style.color = '#e8a0bf';
+    countEl.style.textShadow = '0 0 20px rgba(232,160,191,0.6)';
+  }
+}
+
+function onGardenHeartBurst(e) {
+  e.stopPropagation();
+  const wrapper = document.getElementById('gardenWrapper');
+  if (!wrapper || !gardenActive) return;
+
+  const heart = e.currentTarget;
+  heart.classList.add('garden-heart-burst');
+  setTimeout(() => heart.classList.remove('garden-heart-burst'), 600);
+
+  for (let i = 0; i < 12; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'garden-heart-particle';
+    particle.style.left = '50%';
+    particle.style.top = '50%';
+    const angle = (i / 12) * Math.PI * 2;
+    const dist = 60 + Math.random() * 80;
+    particle.style.cssText += `
+      --heart-tx: ${Math.cos(angle) * dist}px;
+      --heart-ty: ${Math.sin(angle) * dist}px;
+      --heart-rot: ${Math.random() * 360}deg;
+    `;
+    particle.textContent = ['💖','✨','💫','🌟','💗'][Math.floor(Math.random()*5)];
+    wrapper.appendChild(particle);
+    setTimeout(() => { if (particle.parentNode) particle.remove(); }, 2000);
+  }
+}
+
+function startGardenTypewriter() {
   const evt = EVENTS.find(e => e.id === 'universe-of-love');
   if (!evt || !evt.loveLetters) return;
-  const letterEl = document.getElementById('universeLetter');
+  const letterEl = document.getElementById('gardenLetter');
   if (!letterEl) return;
 
   let letterIdx = 0;
@@ -1545,7 +1243,7 @@ function startUniverseTypewriter() {
   let isDeleting = false;
 
   function typeNext() {
-    if (!letterEl || !universeSkyActive) return;
+    if (!letterEl || !gardenActive) return;
     const letters = evt.loveLetters;
     const currentText = letters[letterIdx];
 
@@ -1555,21 +1253,21 @@ function startUniverseTypewriter() {
         setTimeout(() => { if (letterEl) letterEl.style.opacity = '1'; }, 200);
       }
       if (charIdx < currentText.length) {
-        letterEl.innerHTML = currentText.substring(0, charIdx + 1) + '<span class="sky-cursor">|</span>';
+        letterEl.innerHTML = currentText.substring(0, charIdx + 1) + '<span class="garden-cursor">|</span>';
         charIdx++;
-        universeTypewriterTimeout = setTimeout(typeNext, 40 + Math.random() * 20);
+        gardenTypewriterTimeout = setTimeout(typeNext, 35 + Math.random() * 20);
       } else {
         letterEl.innerHTML = currentText;
-        universeTypewriterTimeout = setTimeout(() => {
+        gardenTypewriterTimeout = setTimeout(() => {
           isDeleting = true;
           typeNext();
         }, 3500);
       }
     } else {
       if (charIdx > 0) {
-        letterEl.innerHTML = currentText.substring(0, charIdx - 1) + '<span class="sky-cursor">|</span>';
+        letterEl.innerHTML = currentText.substring(0, charIdx - 1) + '<span class="garden-cursor">|</span>';
         charIdx--;
-        universeTypewriterTimeout = setTimeout(typeNext, 18);
+        gardenTypewriterTimeout = setTimeout(typeNext, 18);
       } else {
         isDeleting = false;
         letterIdx = (letterIdx + 1) % letters.length;
@@ -1581,29 +1279,42 @@ function startUniverseTypewriter() {
   typeNext();
 }
 
-function showUniverseMemory() {
-  const evt = EVENTS.find(e => e.id === 'universe-of-love');
-  if (!evt || !evt.memoryImages || !universeSkyActive) return;
+function startGardenShootingStars() {
+  gardenShootingInterval = setInterval(() => {
+    if (!gardenActive) return;
+    const container = document.getElementById('gardenShooting');
+    if (!container) return;
 
-  const container = document.getElementById('universeMemorySky');
-  if (!container) return;
-
-  container.innerHTML = '';
-  const imgSrc = evt.memoryImages[Math.floor(Math.random() * evt.memoryImages.length)];
-  const img = document.createElement('div');
-  img.className = 'sky-memory-photo';
-  const left = 10 + Math.random() * 70;
-  const top = 15 + Math.random() * 55;
-  const rotation = (Math.random() - 0.5) * 20;
-
-  img.style.cssText = `
-    background-image:url('${imgSrc}');
-    left:${left}%; top:${top}%;
-    --rotation:${rotation}deg;
-  `;
-  container.appendChild(img);
-
-  requestAnimationFrame(() => img.classList.add('visible'));
-  setTimeout(() => img.classList.remove('visible'), 4500);
-  setTimeout(() => { if (img.parentNode) img.remove(); }, 6000);
+    const star = document.createElement('div');
+    star.className = 'garden-shooting-star';
+    star.style.top = `${5 + Math.random() * 40}%`;
+    star.style.animationDuration = `${1 + Math.random() * 1.5}s`;
+    container.appendChild(star);
+    setTimeout(() => { if (star.parentNode) star.remove(); }, 3000);
+  }, 5000 + Math.random() * 5000);
 }
+
+function startGardenFloatingHearts() {
+  gardenHeartsInterval = setInterval(() => {
+    if (!gardenActive) return;
+    const container = document.getElementById('gardenHearts');
+    if (!container) return;
+
+    const heart = document.createElement('div');
+    heart.className = 'garden-floating-heart';
+    heart.style.left = `${Math.random() * 100}%`;
+    heart.style.animationDuration = `${4 + Math.random() * 4}s`;
+    heart.style.animationDelay = `${Math.random() * 2}s`;
+    heart.textContent = ['💖','💕','💗','💝','💘'][Math.floor(Math.random()*5)];
+    container.appendChild(heart);
+    setTimeout(() => { if (heart.parentNode) heart.remove(); }, 10000);
+  }, 2000);
+}
+
+// ===================== INIT =====================
+loadSong(0);
+renderEventButtons();
+setupCursorHover();
+showToast('Welcome, Dal. Use arrow keys or scroll to navigate 💫');
+
+
